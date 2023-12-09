@@ -30,14 +30,17 @@ type Question struct {
 	AudioUrl        string                   `json:"audio_url" gorm:"column:audio_url;"`
 	Type            QuestionType             `json:"type" gorm:"column:type;"`
 	Level           QuestionLevel            `json:"level" gorm:"column:level;"`
+	AssignmentId    int                      `json:"assignment_id" gorm:"column:assignment_id;"`
 	TeacherId       *int                     `json:"teacher_id" gorm:"column:teacher_id;"`
 	SchoolId        *int                     `json:"school_id" gorm:"column:school_id;"`
 	SubjectId       int                      `json:"subject_id" gorm:"column:subject_id;"`
 	Order           *int                     `json:"order" gorm:"-"`
 	Point           *int                     `json:"point" gorm:"-"`
-	Questions       []*QuestionCreate        `json:"questions" gorm:"-"`
+	ParentId        *int                     `json:"parent_id" gorm:"column:parent_id;"`
 	Choices         []*QuestionChoice        `json:"choices" gorm:"foreignKey:QuestionId"`
-	CorrectAnswers  []*QuestionCorrectAnswer `json:"correct_answers" gorm:"foreignKey:QuestionId"`
+	CorrectAnswers  []*QuestionCorrectAnswer `json:"correct_answers" gorm:"foreignKey:QuestionId;"`
+	Answers         []*QuestionAnswer        `json:"answer" gorm:"foreignKey:QuestionId"`
+	Questions       []*Question              `json:"questions" gorm:"foreignKey:ParentId"`
 }
 
 func (Question) TableName() string { return "questions" }

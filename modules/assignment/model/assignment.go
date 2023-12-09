@@ -13,14 +13,16 @@ const (
 )
 
 type Assignment struct {
-	common.SQLModel `json:",inline"`
-	Title           string      `json:"title" gorm:"column:title;"`
-	Description     string      `json:"description" gorm:"column:description;"`
-	TotalPoint      int         `json:"total_point" gorm:"column:total_point;"`
-	TeacherId       *int        `json:"teacher_id" gorm:"column:teacher_id;"`
-	SchoolId        *int        `json:"school_id" gorm:"column:school_id;"`
-	SubjectId       int         `json:"subject_id" gorm:"column:subject_id;"`
-	Questions       []*Question `json:"questions" gorm:"many2many:question_assignment;"`
+	common.SQLModel     `json:",inline"`
+	Title               string                 `json:"title" gorm:"column:title;"`
+	Description         string                 `json:"description" gorm:"column:description;"`
+	TotalPoint          int                    `json:"total_point" gorm:"column:total_point;"`
+	TeacherId           *int                   `json:"teacher_id" gorm:"column:teacher_id;"`
+	SchoolId            *int                   `json:"school_id" gorm:"column:school_id;"`
+	SubjectId           int                    `json:"subject_id" gorm:"column:subject_id;"`
+	Questions           []*Question            `json:"questions" gorm:"foreignkey:AssignmentId;"`
+	AssignmentTurnIn    []*AssignmentTurnIn    `json:"assignment_turn_ins" gorm:"foreignkey:AssignmentId;association_foreignkey:ID"`
+	AssignmentPlacement []*AssignmentPlacement `json:"assignment_placements" gorm:"foreignkey:AssignmentId;association_foreignkey:ID"`
 }
 
 func (Assignment) TableName() string { return "assignments" }
@@ -30,12 +32,15 @@ func (a *Assignment) Mask(isAdminOrOwner bool) {
 }
 
 type AssignmentCreate struct {
-	StartTime  *string           `json:"start_time"`
-	EndTime    *string           `json:"end_time"`
-	CourseId   *int              `json:"course_id" gorm:"column:course_id;"`
-	LectureId  *int              `json:"lecture_id" gorm:"column:lecture_id;"`
-	SectionId  *int              `json:"section_id" gorm:"column:section_id;"`
-	Type       *AssignmentType   `json:"type"`
-	Assignment Assignment        `json:"assignment"`
-	Questions  []*QuestionCreate `json:"questions"`
+	Assignment `,json:"inline"`
+	StartTime  *string        `json:"start_time" gorm:"-"`
+	EndTime    *string        `json:"end_time" gorm:"-"`
+	CourseId   *int           `json:"course_id" gorm:"-;"`
+	LectureId  *int           `json:"lecture_id" gorm:"-;"`
+	SectionId  *int           `json:"section_id" gorm:"-;"`
+	Type       AssignmentType `json:"type" gorm:"-;"`
+}
+
+func (AssignmentCreate) TableName() string {
+	return "assignments"
 }

@@ -8,9 +8,6 @@ import (
 	usrmodel "server/modules/user/model"
 )
 
-type RegisterRepo interface {
-	CreateAuth(ctx context.Context, data *authmodel.Auth) error
-}
 type UserRepo interface {
 	FindUser(ctx context.Context, conditions map[string]interface{}, moreInfo ...string) (*usrmodel.User, error)
 	CreateUser(ctx context.Context, data *usrmodel.User) (*usrmodel.User, error)
@@ -18,13 +15,12 @@ type UserRepo interface {
 	CreateTeacherInfo(ctx context.Context, data *usrmodel.TeacherInfo) error
 }
 type registerBiz struct {
-	registerRepo RegisterRepo
-	userRepo     UserRepo
-	hasher       Hasher
+	userRepo UserRepo
+	hasher   Hasher
 }
 
-func NewRegisterBiz(registerRepo RegisterRepo, userRepo UserRepo, hasher Hasher) *registerBiz {
-	return &registerBiz{registerRepo: registerRepo, userRepo: userRepo, hasher: hasher}
+func NewRegisterBiz(userRepo UserRepo, hasher Hasher) *registerBiz {
+	return &registerBiz{userRepo: userRepo, hasher: hasher}
 }
 
 func (biz *registerBiz) Register(ctx context.Context, data *usrmodel.User) (*usrmodel.User, error) {

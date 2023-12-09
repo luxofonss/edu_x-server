@@ -8,7 +8,6 @@ import (
 	"server/libs/appctx"
 	"server/libs/hasher"
 	usrbiz "server/modules/auth/biz"
-	authrepo "server/modules/auth/repository/postgresql"
 	usermodel "server/modules/user/model"
 	userpostgres "server/modules/user/repository/postgresql"
 )
@@ -47,9 +46,8 @@ func Register(appCtx appctx.AppContext) gin.HandlerFunc {
 		}
 		// setup dependencies
 		md5 := hasher.NewMD5Hash()
-		authRepo := authrepo.NewAuthRepo(db)
 		userRepo := userpostgres.NewUserRepo(db)
-		biz := usrbiz.NewRegisterBiz(authRepo, userRepo, md5)
+		biz := usrbiz.NewRegisterBiz(userRepo, md5)
 
 		userData, err := biz.Register(c.Request.Context(), &requestBody)
 		if err != nil {

@@ -187,3 +187,7 @@ j
 0modules/course/biz/course_get_all_assignments.go,d\7\d74efea2d789f273d9c2cc3349fbb0d7b859784d
 M
 modules/user/model/address.go,f\7\f71699629d3151b79da0a4f135959cccf247735b
+^
+.modules/assignment/model/assignment_turn_in.go,f\c\fc634822619759753768b4e33faf476ff8e8dec1
+[
++modules/assignment/model/question_answer.go,6\f\6f565a8081f7fd96d7f8dd3394bc2b6b28b68c6f
