@@ -28,10 +28,6 @@ type User struct {
 
 func (User) TableName() string { return "users" }
 
-func (u *User) Mask(isAdminOrOwner bool) {
-	u.GenUID(common.DbTypeUser)
-}
-
 func (u *User) GetUserId() int {
 	return u.Id
 }

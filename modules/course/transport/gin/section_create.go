@@ -36,8 +36,6 @@ func CreateSection(appCtx appctx.AppContext) gin.HandlerFunc {
 			panic(err)
 		}
 
-		createdSection.Mask(true)
-
 		c.JSON(http.StatusCreated, common.SimpleSuccessResponse(createdSection))
 	}
 }

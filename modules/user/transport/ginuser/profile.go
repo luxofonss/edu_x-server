@@ -23,7 +23,6 @@ func GetProfile(ctx appctx.AppContext) gin.HandlerFunc {
 			panic(err)
 		}
 
-		user.Mask(false)
 		c.JSON(http.StatusOK, common.SimpleSuccessResponse(user))
 	}
 }

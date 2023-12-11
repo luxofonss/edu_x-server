@@ -18,7 +18,3 @@ type Lecture struct {
 }
 
 func (Lecture) TableName() string { return "lectures" }
-
-func (l *Lecture) Mask(isAdminOrOwner bool) {
-	l.GenUID(common.DbTypeLecture)
-}

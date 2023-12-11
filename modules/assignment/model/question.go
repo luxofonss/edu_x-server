@@ -1,6 +1,9 @@
 package assignmentmodel
 
-import "server/common"
+import (
+	"gorm.io/gorm"
+	"server/common"
+)
 
 const QuestionEntityName = "Question"
 
@@ -30,7 +33,7 @@ type Question struct {
 	AudioUrl        string                   `json:"audio_url" gorm:"column:audio_url;"`
 	Type            QuestionType             `json:"type" gorm:"column:type;"`
 	Level           QuestionLevel            `json:"level" gorm:"column:level;"`
-	AssignmentId    int                      `json:"assignment_id" gorm:"column:assignment_id;"`
+	AssignmentId    *int                     `json:"assignment_id" gorm:"column:assignment_id;"`
 	TeacherId       *int                     `json:"teacher_id" gorm:"column:teacher_id;"`
 	SchoolId        *int                     `json:"school_id" gorm:"column:school_id;"`
 	SubjectId       int                      `json:"subject_id" gorm:"column:subject_id;"`
@@ -45,18 +48,7 @@ type Question struct {
 
 func (Question) TableName() string { return "questions" }
 
-func (q *Question) Mask(isAdminOrOwner bool) {
+func (q *Question) AfterFind(tx *gorm.DB) error {
 	q.GenUID(common.DbTypeQuestion)
-}
-
-type QuestionCreate struct {
-	Question      Question                `json:"question"`
-	Choices       []QuestionChoice        `json:"choices"`
-	CorrectAnswer []QuestionCorrectAnswer `json:"correct_answers"`
-}
-
-type CreatedQuestionRelation struct {
-	QuestionId int `json:"question_id"`
-	Order      int `json:"order"`
-	Point      int `json:"point"`
+	return nil
 }

@@ -26,7 +26,6 @@ func GetAssignment(appCtx appctx.AppContext) gin.HandlerFunc {
 			panic(err)
 		}
 
-		assignment.Mask(false)
 		c.JSON(http.StatusOK, common.SimpleSuccessResponse(assignment))
 	}
 }

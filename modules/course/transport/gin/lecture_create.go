@@ -39,8 +39,6 @@ func CreateLecture(appCtx appctx.AppContext) gin.HandlerFunc {
 			panic(err)
 		}
 
-		createdLecture.Mask(true)
-
 		c.JSON(http.StatusCreated, common.SimpleSuccessResponse(createdLecture))
 	}
 }

@@ -41,9 +41,14 @@ func (biz *createAssignmentBiz) CreateAssignment(
 
 	for _, question := range data.Questions {
 		question.TeacherId = &teacherId
+
+		for _, childQuestion := range question.Questions {
+			childQuestion.TeacherId = &teacherId
+			childQuestion.AssignmentId = nil
+		}
 	}
 
-	fmt.Println("subject_id:: ", data.Questions[0].Type)
+	fmt.Println("subject_id:: ", data.Questions[2].Questions[0])
 
 	if err := biz.assignmentRepo.CreateAssignment(ctx, data, teacherId); err != nil {
 		return nil, common.ErrCannotCreateEntity(assignmentmodel.AssignmentEntityName, err)

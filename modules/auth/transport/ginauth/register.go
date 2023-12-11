@@ -31,7 +31,6 @@ import (
 //			panic(common.ErrInternal(err))
 //		}
 //
-//		userData.Mask(false)
 //		c.JSON(http.StatusOK, common.SimpleSuccessResponse(userData.FakeId.String()))
 //	}
 //}
@@ -54,7 +53,6 @@ func Register(appCtx appctx.AppContext) gin.HandlerFunc {
 			panic(common.ErrInternal(err))
 		}
 
-		userData.Mask(false)
 		c.JSON(http.StatusOK, common.SimpleSuccessResponse(userData.FakeId.String()))
 	}
 }

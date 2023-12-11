@@ -41,10 +41,6 @@ type Course struct {
 
 func (Course) TableName() string { return "courses" }
 
-func (c *Course) Mask(isAdminOrOwner bool) {
-	c.GenUID(common.DbTypeCourse)
-}
-
 type CourseCreate struct {
 	Course      Course        `json:"course"`
 	CourseInfos []*CourseInfo `json:"course_infos"`

@@ -1,19 +1,16 @@
 package common
 
-import "time"
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
 
 type SQLModel struct {
-	Id        int        `json:"-" gorm:"column:id;index"`
-	FakeId    *UID       `json:"id" gorm:"-"`
+	Id        uuid.UUID  `json:"id" gorm:"column:id;index"`
 	DeletedAt *time.Time `json:"deleted_at" gorm:"column:deleted_at;"`
 	CreatedAt *time.Time `json:"created_at" gorm:"column:created_at;"`
 	UpdatedAt *time.Time `json:"updated_at" gorm:"column:updated_at;"`
-}
-
-func (m *SQLModel) GenUID(dbType int) {
-	uid := NewUID(uint32(m.Id), dbType, 1)
-
-	m.FakeId = &uid
 }
 
 type SimpleSqlModel struct {

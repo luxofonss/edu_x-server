@@ -30,7 +30,6 @@ func CreateAssignment(appCtx appctx.AppContext) gin.HandlerFunc {
 			panic(err)
 		}
 
-		assignmentCreated.Mask(true)
 		c.JSON(http.StatusCreated, common.SimpleSuccessResponse(assignmentCreated))
 	}
 }

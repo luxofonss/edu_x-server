@@ -10,7 +10,7 @@ func (repo *assignmentRepo) GetAssignment(ctx context.Context, id int) (*assignm
 	db := repo.db.Table(assignmentmodel.Assignment{}.TableName())
 	var data assignmentmodel.Assignment
 
-	db = db.Preload("Questions").Preload("Questions.Choices").Preload("Questions.CorrectAnswers")
+	db = db.Preload("Questions").Preload("Questions.Choices").Preload("Questions.Questions")
 	if err := db.Where("id = ?", id).First(&data).Error; err != nil {
 		return nil, err
 	}
@@ -18,14 +18,44 @@ func (repo *assignmentRepo) GetAssignment(ctx context.Context, id int) (*assignm
 	return &data, nil
 }
 
-func (repo *assignmentRepo) GetAssignmentByCourseId(ctx context.Context, id int) (*assignmentmodel.Assignment, error) {
+func (repo *assignmentRepo) GetAssignmentByCourseId(ctx context.Context, id int) ([]*assignmentmodel.Assignment, error) {
 	db := repo.db.Table(assignmentmodel.Assignment{}.TableName())
-	var data assignmentmodel.Assignment
+	var data []*assignmentmodel.Assignment
 
-	db = db.Preload("Questions").Preload("Questions.Choices").Preload("Questions.CorrectAnswers")
-	if err := db.Where("course_id = ?", id).First(&data).Error; err != nil {
+	db = db.Joins("JOIN assignment_placement ON assignment_placement.assignment_id = assignments.id").
+		Where("assignment_placement.course_id = ?", id)
+
+	if err := db.Find(&data).Error; err != nil {
 		return nil, err
 	}
 
-	return &data, nil
+	return data, nil
+}
+
+func (repo *assignmentRepo) GetAssignmentBySectionId(ctx context.Context, id int) ([]*assignmentmodel.Assignment, error) {
+	db := repo.db.Table(assignmentmodel.Assignment{}.TableName())
+	var data []*assignmentmodel.Assignment
+
+	db = db.Joins("JOIN assignment_placement ON assignment_placement.assignment_id = assignments.id").
+		Where("assignment_placement.section_id = ?", id)
+
+	if err := db.Find(&data).Error; err != nil {
+		return nil, err
+	}
+
+	return data, nil
+}
+
+func (repo *assignmentRepo) GetAssignmentByLectureId(ctx context.Context, id int) ([]*assignmentmodel.Assignment, error) {
+	db := repo.db.Table(assignmentmodel.Assignment{}.TableName())
+	var data []*assignmentmodel.Assignment
+
+	db = db.Joins("JOIN assignment_placement ON assignment_placement.assignment_id = assignments.id").
+		Where("assignment_placement.lecture_id = ?", id)
+
+	if err := db.Find(&data).Error; err != nil {
+		return nil, err
+	}
+
+	return data, nil
 }

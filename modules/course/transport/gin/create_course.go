@@ -30,7 +30,6 @@ func CreateCourse(appCtx appctx.AppContext) gin.HandlerFunc {
 			panic(err)
 		}
 
-		createdCourse.Mask(true)
 		c.JSON(http.StatusCreated, common.SimpleSuccessResponse(createdCourse))
 	}
 }

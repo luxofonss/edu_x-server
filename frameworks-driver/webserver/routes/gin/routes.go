@@ -35,7 +35,16 @@ func SetupRoutes(ctx appctx.AppContext, r *gin.RouterGroup) {
 	r.POST("/course/:courseId/section/:sectionId/lecture", middleware.RequiredTeacher(ctx), gincourse.CreateLecture(ctx))
 
 	r.GET("/course/:courseId/assignments", gincourse.GetAllAssignments(ctx))
+	r.GET("/course/:courseId/section/:sectionId/assignments", gincourse.GetAllAssignmentsInSection(ctx))
+	r.GET("/course/:courseId/section/:sectionId/lecture/:lectureId/assignments", gincourse.GetAllAssignmentsInLecture(ctx))
+
 	// Assigment
 	r.GET("/assignment/:id", middleware.RequiredAuth(ctx), assignmentgin.GetAssignment(ctx))
 	r.POST("/assignment", middleware.RequiredTeacher(ctx), assignmentgin.CreateAssignment(ctx))
+
+	// attempt an assignment in any course/lecture/section or in any public assignment
+	r.POST("/assignment/attempt", middleware.RequiredAuth(ctx), assignmentgin.AttemptAssignment(ctx))
+
+	// do assignment
+	r.POST("/assignment-attempt/:assignmentAttemptId/question/:questionId/answer", middleware.RequiredAuth(ctx), assignmentgin.SubmitQuestionAnswer(ctx))
 }

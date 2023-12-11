@@ -17,7 +17,3 @@ type Section struct {
 }
 
 func (Section) TableName() string { return "sections" }
-
-func (s *Section) Mask(isAdminOrOwner bool) {
-	s.GenUID(common.DbTypeSection)
-}

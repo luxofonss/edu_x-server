@@ -21,15 +21,11 @@ type Assignment struct {
 	SchoolId            *int                   `json:"school_id" gorm:"column:school_id;"`
 	SubjectId           int                    `json:"subject_id" gorm:"column:subject_id;"`
 	Questions           []*Question            `json:"questions" gorm:"foreignkey:AssignmentId;"`
-	AssignmentTurnIn    []*AssignmentTurnIn    `json:"assignment_turn_ins" gorm:"foreignkey:AssignmentId;association_foreignkey:ID"`
-	AssignmentPlacement []*AssignmentPlacement `json:"assignment_placements" gorm:"foreignkey:AssignmentId;association_foreignkey:ID"`
+	AssignmentAttempt   []*AssignmentAttempt   `json:"assignment_attempts" gorm:"foreignKey:AssignmentId"`
+	AssignmentPlacement []*AssignmentPlacement `json:"assignment_placements" gorm:"foreignkey:AssignmentId;association_foreignkey:Id"`
 }
 
 func (Assignment) TableName() string { return "assignments" }
-
-func (a *Assignment) Mask(isAdminOrOwner bool) {
-	a.GenUID(common.DbTypeAssignment)
-}
 
 type AssignmentCreate struct {
 	Assignment `,json:"inline"`
@@ -44,3 +40,7 @@ type AssignmentCreate struct {
 func (AssignmentCreate) TableName() string {
 	return "assignments"
 }
+
+var (
+	ErrQuestionNotInAssignment = common.NewCustomError(nil, "question not in assignment", "ErrQuestionNotInAssignment")
+)

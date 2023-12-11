@@ -1,6 +1,9 @@
 package assignmentmodel
 
-import "server/common"
+import (
+	"gorm.io/gorm"
+	"server/common"
+)
 
 const QuestionChoiceEntityName = "QuestionChoice"
 
@@ -16,6 +19,7 @@ type QuestionChoice struct {
 
 func (QuestionChoice) TableName() string { return "question_choices" }
 
-func (q *QuestionChoice) Mask(isAdminOrOwner bool) {
-	q.GenUID(common.DbTypeQuestionChoice)
+func (qc *QuestionChoice) AfterFind(tx *gorm.DB) error {
+	qc.GenUID(common.DbTypeQuestion)
+	return nil
 }
