@@ -1,5 +1,7 @@
 package common
 
+import "github.com/google/uuid"
+
 const (
 	DbTypeCourse            = 1
 	DbTypeUser              = 2
@@ -18,7 +20,6 @@ const (
 )
 
 type Requester interface {
-	GetUserId() int
+	GetUserId() uuid.UUID
 	GetEmail() string
-	GetRole() string
 }

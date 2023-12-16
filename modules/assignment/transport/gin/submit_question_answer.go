@@ -2,9 +2,9 @@ package assignmentgin
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"server/common"
 	"server/libs/appctx"
 	assignmentbiz "server/modules/assignment/biz"
@@ -21,21 +21,14 @@ func SubmitQuestionAnswer(appCtx appctx.AppContext) gin.HandlerFunc {
 			panic(common.NewCustomError(err, "Invalid payload", "SubmitQuestionAnswer"))
 		}
 
-		assignmentAttemptId, err := strconv.Atoi(c.Param("assignmentAttemptId"))
+		questionId, err := uuid.Parse(c.Param("questionId"))
 		if err != nil {
 			panic(err)
 		}
 
-		if assignmentAttemptId == 0 {
-			panic(common.NewCustomError(nil, "Invalid assignment attempt id", "SubmitQuestionAnswer"))
-		}
-
-		questionId, err := strconv.Atoi(c.Param("questionId"))
+		assignmentAttemptId, err := uuid.Parse(c.Param("assignmentAttemptId"))
 		if err != nil {
 			panic(err)
-		}
-		if questionId == 0 {
-			panic(common.NewCustomError(nil, "Invalid question id", "SubmitQuestionAnswer"))
 		}
 
 		data.QuestionId = questionId

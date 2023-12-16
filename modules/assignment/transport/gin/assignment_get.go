@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"server/common"
 	"server/libs/appctx"
 	assignmentbiz "server/modules/assignment/biz"
@@ -12,7 +13,10 @@ import (
 
 func GetAssignment(appCtx appctx.AppContext) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		uid, err := common.FromBase58(c.Param("id"))
+		uid, err := uuid.Parse(c.Param("id"))
+		if err != nil {
+			panic(err)
+		}
 
 		if err != nil {
 			panic(err)
@@ -21,7 +25,7 @@ func GetAssignment(appCtx appctx.AppContext) gin.HandlerFunc {
 		assignmentRepo := assignmentrepo.NewAssignmentRepo(db)
 		biz := assignmentbiz.NewAssignmentGetBiz(assignmentRepo)
 
-		assignment, err := biz.GetAssignment(c.Request.Context(), int(uid.GetLocalId()))
+		assignment, err := biz.GetAssignment(c.Request.Context(), uid)
 		if err != nil {
 			panic(err)
 		}

@@ -4,12 +4,13 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/google/uuid"
 	"server/common"
 	assignmentmodel "server/modules/assignment/model"
 )
 
 type AssignmentRepo interface {
-	CreateAssignment(ctx context.Context, data *assignmentmodel.AssignmentCreate, teacherId int) error
+	CreateAssignment(ctx context.Context, data *assignmentmodel.AssignmentCreate, teacherId uuid.UUID) error
 	CreateChoice(ctx context.Context, data *assignmentmodel.QuestionChoice) error
 	CreateCorrectAnswer(ctx context.Context, data *assignmentmodel.QuestionCorrectAnswer) error
 	CreateQuestion(ctx context.Context, data *assignmentmodel.Question) (*assignmentmodel.Question, error)
@@ -27,7 +28,7 @@ func NewAssignmentCreateBiz(assignmentRepo AssignmentRepo) *createAssignmentBiz 
 func (biz *createAssignmentBiz) CreateAssignment(
 	ctx context.Context,
 	data *assignmentmodel.AssignmentCreate,
-	teacherId int,
+	teacherId uuid.UUID,
 ) (*assignmentmodel.AssignmentCreate, error) {
 
 	data.AssignmentPlacement = append(data.AssignmentPlacement, &assignmentmodel.AssignmentPlacement{
@@ -40,19 +41,19 @@ func (biz *createAssignmentBiz) CreateAssignment(
 	})
 
 	for _, question := range data.Questions {
-		question.TeacherId = &teacherId
+		question.TeacherId = teacherId
 
 		for _, childQuestion := range question.Questions {
-			childQuestion.TeacherId = &teacherId
-			childQuestion.AssignmentId = nil
+			childQuestion.TeacherId = teacherId
+			childQuestion.AssignmentId = uuid.Nil
 		}
 	}
-
-	fmt.Println("subject_id:: ", data.Questions[2].Questions[0])
 
 	if err := biz.assignmentRepo.CreateAssignment(ctx, data, teacherId); err != nil {
 		return nil, common.ErrCannotCreateEntity(assignmentmodel.AssignmentEntityName, err)
 	}
+
+	fmt.Println("Hello")
 
 	return data, nil
 }

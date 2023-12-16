@@ -15,7 +15,7 @@ func CreateCourse(appCtx appctx.AppContext) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ownerId := c.MustGet(common.CurrentUser).(common.Requester)
 
-		var data *coursemodel.CourseCreate
+		var data *coursemodel.Course
 		if err := c.ShouldBind(&data); err != nil {
 			panic(common.ErrInvalidRequest(err))
 		}

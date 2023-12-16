@@ -53,6 +53,6 @@ func Register(appCtx appctx.AppContext) gin.HandlerFunc {
 			panic(common.ErrInternal(err))
 		}
 
-		c.JSON(http.StatusOK, common.SimpleSuccessResponse(userData.FakeId.String()))
+		c.JSON(http.StatusOK, common.SimpleSuccessResponse(userData.Id))
 	}
 }

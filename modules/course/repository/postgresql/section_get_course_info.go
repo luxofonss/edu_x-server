@@ -3,10 +3,11 @@ package coursepg
 import (
 	"context"
 
+	"github.com/google/uuid"
 	coursemodel "server/modules/course/model"
 )
 
-func (repo *courseRepo) GetSectionCourseInfo(ctx context.Context, sectionId int) (*coursemodel.Section, error) {
+func (repo *courseRepo) GetSectionCourseInfo(ctx context.Context, sectionId uuid.UUID) (*coursemodel.Section, error) {
 	db := repo.db.Table(coursemodel.Section{}.TableName())
 
 	var sectionCourseInfo *coursemodel.Section

@@ -23,6 +23,9 @@ func SetupRoutes(ctx appctx.AppContext, r *gin.RouterGroup) {
 	r.POST("/auth/register", ginauth.Register(ctx))
 	r.POST("/auth/login", ginauth.Login(ctx))
 
+	// Subject apis
+	r.GET("/subjects", gincourse.GetAllSubject(ctx))
+
 	r.Use(middleware.RequiredAuth(ctx))
 	r.GET("/user/profile", ginuser.GetProfile(ctx))
 
@@ -30,13 +33,14 @@ func SetupRoutes(ctx appctx.AppContext, r *gin.RouterGroup) {
 	r.POST("/upload", middleware.RequiredAuth(ctx), uploadgin.Upload(ctx))
 
 	// Course
-	r.POST("/course", middleware.RequiredTeacher(ctx), gincourse.CreateCourse(ctx))
-	r.POST("/course/:courseId/section", middleware.RequiredTeacher(ctx), gincourse.CreateSection(ctx))
-	r.POST("/course/:courseId/section/:sectionId/lecture", middleware.RequiredTeacher(ctx), gincourse.CreateLecture(ctx))
+	r.POST("/courses", middleware.RequiredTeacher(ctx), gincourse.CreateCourse(ctx))
+	r.POST("/courses/:courseId/section", middleware.RequiredTeacher(ctx), gincourse.CreateSection(ctx))
+	r.POST("/courses/:courseId/section/:sectionId/lecture", middleware.RequiredTeacher(ctx), gincourse.CreateLecture(ctx))
 
-	r.GET("/course/:courseId/assignments", gincourse.GetAllAssignments(ctx))
-	r.GET("/course/:courseId/section/:sectionId/assignments", gincourse.GetAllAssignmentsInSection(ctx))
-	r.GET("/course/:courseId/section/:sectionId/lecture/:lectureId/assignments", gincourse.GetAllAssignmentsInLecture(ctx))
+	r.GET("/courses/mine", middleware.RequiredTeacher(ctx), gincourse.GetAllCourses(ctx))
+	r.GET("/courses/:courseId/assignments", gincourse.GetAllAssignments(ctx))
+	r.GET("/courses/:courseId/section/:sectionId/assignments", gincourse.GetAllAssignmentsInSection(ctx))
+	r.GET("/courses/:courseId/section/:sectionId/lecture/:lectureId/assignments", gincourse.GetAllAssignmentsInLecture(ctx))
 
 	// Assigment
 	r.GET("/assignment/:id", middleware.RequiredAuth(ctx), assignmentgin.GetAssignment(ctx))

@@ -3,6 +3,7 @@ package coursebiz
 import (
 	"context"
 
+	"github.com/google/uuid"
 	"server/common"
 	coursemodel "server/modules/course/model"
 )
@@ -20,29 +21,14 @@ func NewCreateCourseBiz(courseRepo CourseRepo) *createCourseBiz {
 	return &createCourseBiz{courseRepo: courseRepo}
 }
 
-func (biz *createCourseBiz) CreateCourse(ctx context.Context, data *coursemodel.CourseCreate, teacherId int) (*coursemodel.Course, error) {
-	var course *coursemodel.Course
-	course = &data.Course
+func (biz *createCourseBiz) CreateCourse(ctx context.Context, data *coursemodel.Course, teacherId uuid.UUID) (*coursemodel.Course, error) {
+	data.TeacherId = teacherId
+	data.IsVerified = false
+	data.Code = common.GenCourseCode(6)
 
-	var courseInfos []*coursemodel.CourseInfo
-	courseInfos = data.CourseInfos
-
-	course.TeacherId = teacherId
-	course.IsVerified = false
-	course.SchoolId = nil
-	course.Code = common.GenCourseCode(6)
-
-	createdCourse, err := biz.courseRepo.CreateCourse(ctx, course)
+	createdCourse, err := biz.courseRepo.CreateCourse(ctx, data)
 	if err != nil {
 		return nil, common.ErrCannotCreateEntity(coursemodel.CourseEntityName, err)
-	}
-
-	for _, courseInfo := range courseInfos {
-		courseInfo.CourseId = createdCourse.Id
-	}
-
-	if err := biz.courseRepo.CreateManyCourseInfo(ctx, courseInfos); err != nil {
-		return nil, common.ErrCannotCreateEntity(coursemodel.CourseInfoEntityName, err)
 	}
 
 	return createdCourse, nil

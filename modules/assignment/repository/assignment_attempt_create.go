@@ -2,7 +2,6 @@ package assignmentrepo
 
 import (
 	"context"
-
 	assignmentmodel "server/modules/assignment/model"
 )
 
@@ -11,6 +10,7 @@ func (repo *assignmentRepo) CreateAssignmentAttempt(ctx context.Context, data *a
 
 	attemptData := assignmentmodel.AssignmentAttempt{
 		AssignmentPlacementId: data.AssignmentPlacementId,
+		AssignmentId:          data.AssignmentId,
 		UserId:                data.UserId,
 	}
 

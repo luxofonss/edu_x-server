@@ -1,6 +1,9 @@
 package coursemodel
 
-import "server/common"
+import (
+	"github.com/google/uuid"
+	"server/common"
+)
 
 type CourseInfoTypes string
 
@@ -15,7 +18,7 @@ const CourseInfoEntityName = "CourseInfo"
 
 type CourseInfo struct {
 	common.SQLModel `json:",inline"`
-	CourseId        int             `json:"course_id" gorm:"column:course_id;"`
+	CourseId        uuid.UUID       `json:"course_id" gorm:"column:course_id;type:uuid;"`
 	Content         string          `json:"content" gorm:"column:content;"`
 	Type            CourseInfoTypes `json:"type" gorm:"column:type;"`
 	Course          Course          `json:"course" gorm:"foreignKey:CourseId;"`

@@ -28,13 +28,6 @@ func NewUploadBiz(provider uploadprovider.Provider, imgRepo CreateImageRepo) *up
 }
 
 func (biz *uploadBiz) Upload(ctx context.Context, data []byte, folder, fileName string) (*common.Image, error) {
-	//fileBytes := bytes.NewBuffer(data)
-	//
-	//w, h, err := getImageDimension(fileBytes)
-	//if err != nil {
-	//	return nil, uploadmodel.ErrFileIsNotImage(err)
-	//}
-
 	if strings.TrimSpace(folder) == "" {
 		folder = "files"
 	}

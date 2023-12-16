@@ -3,11 +3,12 @@ package assignmentrepo
 import (
 	"context"
 
+	"github.com/google/uuid"
 	"server/common"
 	assignmentmodel "server/modules/assignment/model"
 )
 
-func (repo *assignmentRepo) GetQuestionById(ctx context.Context, questionId int) (*assignmentmodel.Question, error) {
+func (repo *assignmentRepo) GetQuestionById(ctx context.Context, questionId uuid.UUID) (*assignmentmodel.Question, error) {
 	db := repo.db.Table(assignmentmodel.Question{}.TableName())
 
 	var question *assignmentmodel.Question

@@ -32,6 +32,7 @@ func Login(appCtx appctx.AppContext) gin.HandlerFunc {
 		biz := authbiz.NewLoginBiz(loginRepo, md5, tokenProvider, common.TokenExpireTime)
 
 		token, err := biz.Login(c.Request.Context(), &data)
+		c.SetCookie("token", token.Token, 3600, "/", "localhost", false, true)
 
 		if err != nil {
 			panic(err)

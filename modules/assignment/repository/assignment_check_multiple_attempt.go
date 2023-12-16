@@ -4,10 +4,11 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/google/uuid"
 	assignmentmodel "server/modules/assignment/model"
 )
 
-func (repo *assignmentRepo) CheckMultipleAttempt(ctx context.Context, assignmentPlacementId int) (bool, error) {
+func (repo *assignmentRepo) CheckMultipleAttempt(ctx context.Context, assignmentPlacementId uuid.UUID) (bool, error) {
 	db := repo.db.Table(assignmentmodel.AssignmentPlacement{}.TableName())
 
 	var assignment assignmentmodel.AssignmentPlacement

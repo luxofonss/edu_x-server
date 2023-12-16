@@ -1,6 +1,9 @@
 package usrmodel
 
-import "server/common"
+import (
+	"github.com/google/uuid"
+	"server/common"
+)
 
 const LearnerInfoEntityName = "LearnerInfo"
 
@@ -14,7 +17,7 @@ const (
 
 type LearnerInfo struct {
 	common.SQLModel `json:",inline"`
-	UserId          int         `json:"user_id" gorm:"column:user_id;" validate:"required"`
+	UserId          uuid.UUID   `json:"user_id" gorm:"column:user_id;type:uuid;" validate:"required"`
 	Type            LearnerType `json:"type" gorm:"column:type;" validate:"required"`
 	Grade           int         `json:"grade" gorm:"column:grade;"`
 	School          string      `json:"school" gorm:"column:school;"`

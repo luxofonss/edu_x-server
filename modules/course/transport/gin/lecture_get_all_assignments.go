@@ -3,9 +3,9 @@ package gincourse
 import (
 	"fmt"
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"server/common"
 	"server/libs/appctx"
 	assignmentrepo "server/modules/assignment/repository"
@@ -14,8 +14,7 @@ import (
 
 func GetAllAssignmentsInLecture(appCtx appctx.AppContext) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		lectureIdStr := c.Param("lectureId")
-		lectureId, err := strconv.Atoi(lectureIdStr)
+		lectureId, err := uuid.Parse(c.Param("lectureId"))
 		if err != nil {
 			panic(err)
 		}

@@ -1,6 +1,9 @@
 package authmodel
 
-import "server/common"
+import (
+	"github.com/google/uuid"
+	"server/common"
+)
 
 const EntityName = "Auth"
 
@@ -14,12 +17,12 @@ const (
 
 type Auth struct {
 	common.SimpleSqlModel `json:",inline"`
-	UserId                int      `json:"user_id" gorm:"column:user_id;primary_key"`
-	AuthType              AuthType `json:"auth_type" gorm:"column:auth_type;" validate:"required"`
-	ServiceId             string   `json:"service_id" gorm:"column:service_id;"`
-	Email                 string   `json:"email" gorm:"column:email;" validate:"required, email"`
-	Password              string   `json:"-" gorm:"column:password;" validate:"required, min=6,max=32"`
-	Salt                  string   `json:"-" gorm:"column:salt;" validate:"required"`
+	UserId                uuid.UUID `json:"user_id" gorm:"column:user_id;primary_key;type:uuid;"`
+	AuthType              AuthType  `json:"auth_type" gorm:"column:auth_type;" validate:"required"`
+	ServiceId             string    `json:"service_id" gorm:"column:service_id;"`
+	Email                 string    `json:"email" gorm:"column:email;" validate:"required, email"`
+	Password              string    `json:"-" gorm:"column:password;" validate:"required, min=6,max=32"`
+	Salt                  string    `json:"-" gorm:"column:salt;" validate:"required"`
 }
 
 func (Auth) TableName() string { return "auths" }

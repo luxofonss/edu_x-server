@@ -1,7 +1,7 @@
 package assignmentmodel
 
 import (
-	"gorm.io/gorm"
+	"github.com/google/uuid"
 	"server/common"
 )
 
@@ -13,13 +13,8 @@ type QuestionChoice struct {
 	Order           int       `json:"order" gorm:"column:order;"`
 	IsCorrect       bool      `json:"is_correct" gorm:"column:is_correct;"`
 	AnswerExplain   string    `json:"answer_explain" gorm:"column:answer_explain;"`
-	QuestionId      int       `json:"question_id" gorm:"column:question_id;"`
+	QuestionId      uuid.UUID `json:"question_id" gorm:"column:question_id;type:uuid;"`
 	Question        *Question `json:"question" gorm:"foreignKey:QuestionId;"`
 }
 
 func (QuestionChoice) TableName() string { return "question_choices" }
-
-func (qc *QuestionChoice) AfterFind(tx *gorm.DB) error {
-	qc.GenUID(common.DbTypeQuestion)
-	return nil
-}

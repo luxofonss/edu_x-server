@@ -3,10 +3,11 @@ package assignmentrepo
 import (
 	"context"
 
+	"github.com/google/uuid"
 	assignmentmodel "server/modules/assignment/model"
 )
 
-func (repo *assignmentRepo) GetAssignment(ctx context.Context, id int) (*assignmentmodel.Assignment, error) {
+func (repo *assignmentRepo) GetAssignment(ctx context.Context, id uuid.UUID) (*assignmentmodel.Assignment, error) {
 	db := repo.db.Table(assignmentmodel.Assignment{}.TableName())
 	var data assignmentmodel.Assignment
 
@@ -18,7 +19,7 @@ func (repo *assignmentRepo) GetAssignment(ctx context.Context, id int) (*assignm
 	return &data, nil
 }
 
-func (repo *assignmentRepo) GetAssignmentByCourseId(ctx context.Context, id int) ([]*assignmentmodel.Assignment, error) {
+func (repo *assignmentRepo) GetAssignmentByCourseId(ctx context.Context, id uuid.UUID) ([]*assignmentmodel.Assignment, error) {
 	db := repo.db.Table(assignmentmodel.Assignment{}.TableName())
 	var data []*assignmentmodel.Assignment
 
@@ -32,7 +33,7 @@ func (repo *assignmentRepo) GetAssignmentByCourseId(ctx context.Context, id int)
 	return data, nil
 }
 
-func (repo *assignmentRepo) GetAssignmentBySectionId(ctx context.Context, id int) ([]*assignmentmodel.Assignment, error) {
+func (repo *assignmentRepo) GetAssignmentBySectionId(ctx context.Context, id uuid.UUID) ([]*assignmentmodel.Assignment, error) {
 	db := repo.db.Table(assignmentmodel.Assignment{}.TableName())
 	var data []*assignmentmodel.Assignment
 
@@ -46,7 +47,7 @@ func (repo *assignmentRepo) GetAssignmentBySectionId(ctx context.Context, id int
 	return data, nil
 }
 
-func (repo *assignmentRepo) GetAssignmentByLectureId(ctx context.Context, id int) ([]*assignmentmodel.Assignment, error) {
+func (repo *assignmentRepo) GetAssignmentByLectureId(ctx context.Context, id uuid.UUID) ([]*assignmentmodel.Assignment, error) {
 	db := repo.db.Table(assignmentmodel.Assignment{}.TableName())
 	var data []*assignmentmodel.Assignment
 

@@ -1,8 +1,6 @@
 package server
 
 import (
-	"time"
-
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -11,6 +9,7 @@ import (
 	"server/frameworks-driver/webserver/routes/gin"
 	"server/libs/appctx"
 	uploadprovider "server/libs/upload_provider"
+	"time"
 )
 
 type GinServerConf struct {
@@ -22,16 +21,13 @@ type GinServerConf struct {
 func (g *GinServerConf) CreateServer() interface{} {
 	ginRouter := gin.Default()
 
+	// CORS
 	ginRouter.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"https://foo.com"},
-		AllowMethods:     []string{"PUT", "PATCH"},
-		AllowHeaders:     []string{"Origin"},
-		ExposeHeaders:    []string{"Content-Length"},
+		AllowOrigins:     []string{"http://localhost:3000"},
+		AllowMethods:     []string{"POST", "GET", "PUT", "DELETE", "PATCH", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Content-Length", "Accept-Encoding", "X-CSRF-Token", "Authorization", "accept", "origin", "Cache-Control", "X-Requested-With", "Access-Control-Allow-Origin", "Access-Control-Allow-Headers", "Access-Control-Allow-Methods", "Access-Control-Allow-Credentials"},
 		AllowCredentials: true,
-		AllowOriginFunc: func(origin string) bool {
-			return origin == "https://github.com"
-		},
-		MaxAge: 12 * time.Hour,
+		MaxAge:           12 * time.Hour,
 	}))
 
 	appContext := appctx.NewAppContext(g.sqlDb, g.mongoDb, g.uploadProvider)

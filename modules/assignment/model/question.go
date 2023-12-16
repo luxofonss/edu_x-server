@@ -1,7 +1,7 @@
 package assignmentmodel
 
 import (
-	"gorm.io/gorm"
+	"github.com/google/uuid"
 	"server/common"
 )
 
@@ -33,13 +33,13 @@ type Question struct {
 	AudioUrl        string                   `json:"audio_url" gorm:"column:audio_url;"`
 	Type            QuestionType             `json:"type" gorm:"column:type;"`
 	Level           QuestionLevel            `json:"level" gorm:"column:level;"`
-	AssignmentId    *int                     `json:"assignment_id" gorm:"column:assignment_id;"`
-	TeacherId       *int                     `json:"teacher_id" gorm:"column:teacher_id;"`
-	SchoolId        *int                     `json:"school_id" gorm:"column:school_id;"`
-	SubjectId       int                      `json:"subject_id" gorm:"column:subject_id;"`
+	AssignmentId    uuid.UUID                `json:"assignment_id" gorm:"column:assignment_id;type:uuid;"`
+	TeacherId       uuid.UUID                `json:"teacher_id" gorm:"column:teacher_id;type:uuid;default:NULL;"`
+	SchoolId        uuid.UUID                `json:"school_id" gorm:"column:school_id;type:uuid;default:NULL;"`
+	SubjectId       uuid.UUID                `json:"subject_id" gorm:"column:subject_id;type:uuid;"`
 	Order           *int                     `json:"order" gorm:"-"`
 	Point           *int                     `json:"point" gorm:"-"`
-	ParentId        *int                     `json:"parent_id" gorm:"column:parent_id;"`
+	ParentId        *uuid.UUID               `json:"parent_id" gorm:"column:parent_id;type:uuid;"`
 	Choices         []*QuestionChoice        `json:"choices" gorm:"foreignKey:QuestionId"`
 	CorrectAnswers  []*QuestionCorrectAnswer `json:"correct_answers" gorm:"foreignKey:QuestionId;"`
 	Answers         []*QuestionAnswer        `json:"answer" gorm:"foreignKey:QuestionId"`
@@ -47,8 +47,3 @@ type Question struct {
 }
 
 func (Question) TableName() string { return "questions" }
-
-func (q *Question) AfterFind(tx *gorm.DB) error {
-	q.GenUID(common.DbTypeQuestion)
-	return nil
-}

@@ -3,13 +3,14 @@ package assignmentrepo
 import (
 	"context"
 
+	"github.com/google/uuid"
 	"server/common"
 	assignmentmodel "server/modules/assignment/model"
 )
 
 func (repo *assignmentRepo) GetAssignmentByAssignmentPlacementId(
 	ctx context.Context,
-	AssignmentPlacementId int,
+	AssignmentPlacementId uuid.UUID,
 ) (*assignmentmodel.Assignment, error) {
 	db := repo.db.Table(assignmentmodel.AssignmentPlacement{}.TableName())
 

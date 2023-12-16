@@ -3,11 +3,12 @@ package coursebiz
 import (
 	"context"
 
+	"github.com/google/uuid"
 	assignmentmodel "server/modules/assignment/model"
 )
 
 type AssignmentRepo interface {
-	GetAssignmentByCourseId(ctx context.Context, id int) ([]*assignmentmodel.Assignment, error)
+	GetAssignmentByCourseId(ctx context.Context, id uuid.UUID) ([]*assignmentmodel.Assignment, error)
 }
 
 type getAssignmentsInCourseBiz struct {
@@ -18,7 +19,7 @@ func NewGetAssignmentsInCourseBiz(assignmentRepo AssignmentRepo) *getAssignments
 	return &getAssignmentsInCourseBiz{assignmentRepo: assignmentRepo}
 }
 
-func (biz *getAssignmentsInCourseBiz) GetAssignmentsInCourse(ctx context.Context, courseId int) ([]*assignmentmodel.Assignment, error) {
+func (biz *getAssignmentsInCourseBiz) GetAssignmentsInCourse(ctx context.Context, courseId uuid.UUID) ([]*assignmentmodel.Assignment, error) {
 	assignments, err := biz.assignmentRepo.GetAssignmentByCourseId(ctx, courseId)
 	if err != nil {
 		return nil, err

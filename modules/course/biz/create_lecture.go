@@ -4,14 +4,15 @@ import (
 	"context"
 	"errors"
 
+	"github.com/google/uuid"
 	"server/common"
 	coursemodel "server/modules/course/model"
 )
 
 type CourseLectureRepo interface {
 	CreateLecture(ctx context.Context, data *coursemodel.Lecture) (*coursemodel.Lecture, error)
-	FindCourseByOwnerId(ctx context.Context, teacherId int, courseId int) (*coursemodel.Course, error)
-	GetSectionCourseInfo(ctx context.Context, sectionId int) (*coursemodel.Section, error)
+	FindCourseByOwnerId(ctx context.Context, teacherId uuid.UUID, courseId uuid.UUID) (*coursemodel.Course, error)
+	GetSectionCourseInfo(ctx context.Context, sectionId uuid.UUID) (*coursemodel.Section, error)
 }
 
 type createLectureBiz struct {
@@ -25,9 +26,9 @@ func NewCreateLectureBiz(courseRepo CourseLectureRepo) *createLectureBiz {
 func (biz *createLectureBiz) CreateLecture(
 	ctx context.Context,
 	data *coursemodel.Lecture,
-	courseId int,
-	sectionId int,
-	userId int,
+	courseId uuid.UUID,
+	sectionId uuid.UUID,
+	userId uuid.UUID,
 ) (*coursemodel.Lecture, error) {
 	sectionCourse, err := biz.courseRepo.GetSectionCourseInfo(ctx, sectionId)
 	if err != nil {

@@ -3,10 +3,11 @@ package assignmentrepo
 import (
 	"context"
 
+	"github.com/google/uuid"
 	assignmentmodel "server/modules/assignment/model"
 )
 
-func (repo *assignmentRepo) GetAllAttemptInAssignment(ctx context.Context, assignmentPlacementId int, userId int) ([]assignmentmodel.AssignmentAttempt, error) {
+func (repo *assignmentRepo) GetAllAttemptInAssignment(ctx context.Context, assignmentPlacementId uuid.UUID, userId uuid.UUID) ([]assignmentmodel.AssignmentAttempt, error) {
 	db := repo.db.Table(assignmentmodel.AssignmentAttempt{}.TableName())
 
 	var attempts []assignmentmodel.AssignmentAttempt

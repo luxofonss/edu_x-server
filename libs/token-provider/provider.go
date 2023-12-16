@@ -4,6 +4,7 @@ import (
 	"errors"
 	"time"
 
+	"github.com/google/uuid"
 	"server/common"
 )
 
@@ -14,8 +15,8 @@ type Token struct {
 }
 
 type TokenPayload struct {
-	UserId int    `json:"user_id"`
-	Email  string `json:"email"`
+	UserId uuid.UUID `json:"user_id"`
+	Email  string    `json:"email"`
 }
 
 type Provider interface {

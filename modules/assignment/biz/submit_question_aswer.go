@@ -3,17 +3,18 @@ package assignmentbiz
 import (
 	"context"
 
+	"github.com/google/uuid"
 	"server/common"
 	assignmentmodel "server/modules/assignment/model"
 )
 
 type SubmitQuestionAnswerRepo interface {
-	GetAssigmentAttemptById(ctx context.Context, assignmentAttemptId int) (*assignmentmodel.AssignmentAttempt, error)
+	GetAssigmentAttemptById(ctx context.Context, assignmentAttemptId uuid.UUID) (*assignmentmodel.AssignmentAttempt, error)
 	GetAssignmentByAssignmentPlacementId(
 		ctx context.Context,
-		assignmentAttemptId int,
+		assignmentAttemptId uuid.UUID,
 	) (*assignmentmodel.Assignment, error)
-	GetQuestionById(ctx context.Context, questionId int) (*assignmentmodel.Question, error)
+	GetQuestionById(ctx context.Context, questionId uuid.UUID) (*assignmentmodel.Question, error)
 	SubmitQuestionAnswer(ctx context.Context, data *assignmentmodel.QuestionAnswer) (*assignmentmodel.QuestionAnswer, error)
 }
 
@@ -33,12 +34,12 @@ func (biz *submitQuestionAnswerBiz) SubmitQuestionAnswer(ctx context.Context, da
 
 	// TODO: check valid time to submit question
 
-	var assignmentId int
+	var assignmentId uuid.UUID
 
-	if assignmentAttempt.AssignmentId != nil {
-		assignmentId = *assignmentAttempt.AssignmentId
+	if assignmentAttempt.AssignmentId != uuid.Nil {
+		assignmentId = assignmentAttempt.AssignmentId
 	} else {
-		assignment, err := biz.repo.GetAssignmentByAssignmentPlacementId(ctx, *assignmentAttempt.AssignmentPlacementId)
+		assignment, err := biz.repo.GetAssignmentByAssignmentPlacementId(ctx, assignmentAttempt.AssignmentPlacementId)
 		if err != nil {
 			return nil, common.ErrCannotGetEntity(assignmentmodel.AssignmentEntityName, err)
 		}
@@ -51,7 +52,7 @@ func (biz *submitQuestionAnswerBiz) SubmitQuestionAnswer(ctx context.Context, da
 		return nil, err
 	}
 
-	if *question.AssignmentId != assignmentId {
+	if question.AssignmentId != assignmentId {
 		return nil, assignmentmodel.ErrQuestionNotInAssignment
 	}
 

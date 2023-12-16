@@ -2,9 +2,9 @@ package gincourse
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"server/common"
 	"server/libs/appctx"
 	coursebiz "server/modules/course/biz"
@@ -15,8 +15,8 @@ import (
 func CreateSection(appCtx appctx.AppContext) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ownerId := c.MustGet(common.CurrentUser).(common.Requester)
-		courseIdString := c.Param("courseId")
-		courseId, err := strconv.Atoi(courseIdString)
+
+		courseId, err := uuid.Parse(c.Param("courseId"))
 		if err != nil {
 			panic(err)
 		}

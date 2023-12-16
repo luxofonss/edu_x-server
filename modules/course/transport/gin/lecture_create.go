@@ -2,9 +2,9 @@ package gincourse
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"server/common"
 	"server/libs/appctx"
 	coursebiz "server/modules/course/biz"
@@ -16,11 +16,18 @@ func CreateLecture(appCtx appctx.AppContext) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		db := appCtx.GetMainSQLDbConnection()
 
+		courseId, err := uuid.Parse(c.Param("courseId"))
+		if err != nil {
+			panic(err)
+		}
+
+		sectionId, err := uuid.Parse(c.Param("sectionId"))
+		if err != nil {
+			panic(err)
+		}
+
 		ownerId := c.MustGet(common.CurrentUser).(common.Requester)
-		courseId := c.Param("courseId")
-		courseIdInt, err := strconv.Atoi(courseId)
-		sectionId := c.Param("sectionId")
-		sectionIdInt, err := strconv.Atoi(sectionId)
+
 		if err != nil {
 			panic(err)
 		}
@@ -34,7 +41,7 @@ func CreateLecture(appCtx appctx.AppContext) gin.HandlerFunc {
 		courseRepo := coursepg.NewCourseRepo(db)
 		biz := coursebiz.NewCreateLectureBiz(courseRepo)
 
-		createdLecture, err := biz.CreateLecture(c.Request.Context(), data, courseIdInt, sectionIdInt, ownerId.GetUserId())
+		createdLecture, err := biz.CreateLecture(c.Request.Context(), data, courseId, sectionId, ownerId.GetUserId())
 		if err != nil {
 			panic(err)
 		}
