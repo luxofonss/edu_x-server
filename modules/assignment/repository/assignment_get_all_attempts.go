@@ -7,12 +7,12 @@ import (
 	assignmentmodel "server/modules/assignment/model"
 )
 
-func (repo *assignmentRepo) GetAllAttemptInAssignment(ctx context.Context, assignmentPlacementId uuid.UUID, userId uuid.UUID) ([]assignmentmodel.AssignmentAttempt, error) {
+func (repo *assignmentRepo) GetAllAttemptInAssignment(ctx context.Context, assignmentId uuid.UUID, userId uuid.UUID) ([]assignmentmodel.AssignmentAttempt, error) {
 	db := repo.db.Table(assignmentmodel.AssignmentAttempt{}.TableName())
 
 	var attempts []assignmentmodel.AssignmentAttempt
 
-	err := db.Where("assignment_placement_id = ? AND user_id = ?", assignmentPlacementId, userId).Find(&attempts).Error
+	err := db.Where("assignment_id = ? AND user_id = ?", assignmentId, userId).Find(&attempts).Error
 	if err != nil {
 		return nil, err
 	}

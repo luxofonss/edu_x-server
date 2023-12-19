@@ -3,7 +3,6 @@ package assignmentbiz
 import (
 	"context"
 	"fmt"
-
 	"github.com/google/uuid"
 	"server/common"
 	assignmentmodel "server/modules/assignment/model"
@@ -14,7 +13,6 @@ type AssignmentRepo interface {
 	CreateChoice(ctx context.Context, data *assignmentmodel.QuestionChoice) error
 	CreateCorrectAnswer(ctx context.Context, data *assignmentmodel.QuestionCorrectAnswer) error
 	CreateQuestion(ctx context.Context, data *assignmentmodel.Question) (*assignmentmodel.Question, error)
-	CreateAssignmentPlacement(ctx context.Context, data *assignmentmodel.AssignmentPlacement) error
 }
 
 type createAssignmentBiz struct {
@@ -30,15 +28,6 @@ func (biz *createAssignmentBiz) CreateAssignment(
 	data *assignmentmodel.AssignmentCreate,
 	teacherId uuid.UUID,
 ) (*assignmentmodel.AssignmentCreate, error) {
-
-	data.AssignmentPlacement = append(data.AssignmentPlacement, &assignmentmodel.AssignmentPlacement{
-		StartTime: *data.StartTime,
-		EndTime:   *data.EndTime,
-		Type:      data.Type,
-		CourseId:  data.CourseId,
-		LectureId: data.LectureId,
-		SectionId: data.SectionId,
-	})
 
 	for _, question := range data.Questions {
 		question.TeacherId = teacherId

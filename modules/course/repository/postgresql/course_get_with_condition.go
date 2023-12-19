@@ -19,6 +19,10 @@ func (repo *courseRepo) GetCourseWithCondition(
 		if v.TeacherId != uuid.Nil {
 			db = db.Where("teacher_id = ?", v.TeacherId)
 		}
+
+		if v.Id != uuid.Nil {
+			db = db.Where("id = ?", v.Id)
+		}
 	}
 
 	for i := range moreKeys {

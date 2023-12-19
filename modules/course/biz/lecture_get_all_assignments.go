@@ -8,9 +8,8 @@ import (
 )
 
 type GetAssignmentLectureRepo interface {
-	GetAssignmentByLectureId(ctx context.Context, id uuid.UUID) ([]*assignmentmodel.Assignment, error)
+	GetAssignmentByPlacementId(ctx context.Context, id uuid.UUID) ([]*assignmentmodel.Assignment, error)
 }
-
 type getAssignmentsInLectureBiz struct {
 	assignmentRepo GetAssignmentLectureRepo
 }
@@ -20,7 +19,7 @@ func NewGetAssignmentsInLectureBiz(assignmentRepo GetAssignmentLectureRepo) *get
 }
 
 func (biz *getAssignmentsInLectureBiz) GetAssignmentsInLecture(ctx context.Context, lectureId uuid.UUID) ([]*assignmentmodel.Assignment, error) {
-	assignments, err := biz.assignmentRepo.GetAssignmentByLectureId(ctx, lectureId)
+	assignments, err := biz.assignmentRepo.GetAssignmentByPlacementId(ctx, lectureId)
 	if err != nil {
 		return nil, err
 	}

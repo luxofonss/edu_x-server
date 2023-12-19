@@ -2,22 +2,20 @@ package assignmentrepo
 
 import (
 	"context"
-	"fmt"
+	assignmentmodel "server/modules/assignment/model"
 
 	"github.com/google/uuid"
-	assignmentmodel "server/modules/assignment/model"
 )
 
-func (repo *assignmentRepo) CheckMultipleAttempt(ctx context.Context, assignmentPlacementId uuid.UUID) (bool, error) {
-	db := repo.db.Table(assignmentmodel.AssignmentPlacement{}.TableName())
+func (repo *assignmentRepo) CheckMultipleAttempt(ctx context.Context, assignmentId uuid.UUID) (bool, error) {
+	db := repo.db.Table(assignmentmodel.Assignment{}.TableName())
 
-	var assignment assignmentmodel.AssignmentPlacement
+	var assignment assignmentmodel.Assignment
 
-	err := db.Where("id = ?", assignmentPlacementId).First(&assignment).Error
+	err := db.Where("id = ?", assignmentId).First(&assignment).Error
 	if err != nil {
 		return false, err
 	}
 
-	fmt.Println("assignment:: ", assignment.CanMultipleAttempt)
-	return assignment.CanMultipleAttempt, nil
+	return assignment.MultipleAttempt, nil
 }

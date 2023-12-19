@@ -9,9 +9,8 @@ func (repo *assignmentRepo) CreateAssignmentAttempt(ctx context.Context, data *a
 	db := repo.db.Table(assignmentmodel.AssignmentAttempt{}.TableName())
 
 	attemptData := assignmentmodel.AssignmentAttempt{
-		AssignmentPlacementId: data.AssignmentPlacementId,
-		AssignmentId:          data.AssignmentId,
-		UserId:                data.UserId,
+		AssignmentId: data.AssignmentId,
+		UserId:       data.UserId,
 	}
 
 	if err := db.Create(&attemptData).Error; err != nil {

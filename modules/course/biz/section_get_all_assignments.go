@@ -8,7 +8,7 @@ import (
 )
 
 type GetAssignmentSectionRepo interface {
-	GetAssignmentBySectionId(ctx context.Context, id uuid.UUID) ([]*assignmentmodel.Assignment, error)
+	GetAssignmentByPlacementId(ctx context.Context, id uuid.UUID) ([]*assignmentmodel.Assignment, error)
 }
 
 type getAssignmentsInSectionBiz struct {
@@ -20,7 +20,7 @@ func NewGetAssignmentsInSectionBiz(assignmentRepo GetAssignmentSectionRepo) *get
 }
 
 func (biz *getAssignmentsInSectionBiz) GetAssignmentsInSection(ctx context.Context, sectionId uuid.UUID) ([]*assignmentmodel.Assignment, error) {
-	assignments, err := biz.assignmentRepo.GetAssignmentBySectionId(ctx, sectionId)
+	assignments, err := biz.assignmentRepo.GetAssignmentByPlacementId(ctx, sectionId)
 	if err != nil {
 		return nil, err
 	}

@@ -52,21 +52,22 @@ type CourseCreate struct {
 }
 
 type CourseGet struct {
-	Id            uuid.UUID          `json:"id"`
-	Name          string             `json:"name" gorm:"column:name;"`
-	Description   string             `json:"description" gorm:"column:description;"`
-	BackgroundImg string             `json:"background_img" gorm:"column:background_img;"`
-	StartDate     string             `json:"start_date" gorm:"column:start_date;"`
-	EndDate       string             `json:"end_date" gorm:"column:end_date;"`
-	Price         float64            `json:"price" gorm:"column:price;"`
-	Currency      string             `json:"currency" gorm:"column:currency;"`
-	Level         CourseLevel        `json:"level" gorm:"column:level;"`
-	IsVerified    bool               `json:"is_verified" gorm:"column:is_verified;"`
-	SubjectId     uuid.UUID          `json:"subject_id" gorm:"column:subject_id;type:uuid;"`
-	Grade         int                `json:"grade" gorm:"column:grade;"`
-	TeacherId     uuid.UUID          `json:"-" gorm:"column:teacher_id;type:uuid;"`
-	Subject       *SimpleSubjectGet  `json:"subject" gorm:"foreignKey:SubjectId;"`
-	Teacher       *common.SimpleUser `json:"teacher" gorm:"foreignKey:TeacherId;"`
+	common.SQLModel `json:",inline"`
+	Name            string             `json:"name" gorm:"column:name;"`
+	Description     string             `json:"description" gorm:"column:description;"`
+	BackgroundImg   string             `json:"background_img" gorm:"column:background_img;"`
+	StartDate       string             `json:"start_date" gorm:"column:start_date;"`
+	EndDate         string             `json:"end_date" gorm:"column:end_date;"`
+	Price           float64            `json:"price" gorm:"column:price;"`
+	Currency        string             `json:"currency" gorm:"column:currency;"`
+	Level           CourseLevel        `json:"level" gorm:"column:level;"`
+	IsVerified      bool               `json:"is_verified" gorm:"column:is_verified;"`
+	SubjectId       uuid.UUID          `json:"subject_id" gorm:"column:subject_id;type:uuid;"`
+	Grade           int                `json:"grade" gorm:"column:grade;"`
+	TeacherId       uuid.UUID          `json:"-" gorm:"column:teacher_id;type:uuid;"`
+	Subject         *SimpleSubjectGet  `json:"subject" gorm:"foreignKey:SubjectId;"`
+	Teacher         *common.SimpleUser `json:"teacher" gorm:"foreignKey:TeacherId;"`
+	Sections        []*Section         `json:"sections" gorm:"foreignKey:CourseId;"`
 }
 
 var (

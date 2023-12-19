@@ -15,7 +15,7 @@ type Section struct {
 	CourseId        uuid.UUID                     `json:"course_id" gorm:"column:course_id;type:uuid;"`
 	Course          Course                        `json:"course" gorm:"foreignKey:CourseId;"`
 	Assignment      []*assignmentmodel.Assignment `json:"assignments" gorm:"many2many:assignment_placement;"`
-	Lecture         []*Lecture                    `json:"lectures" gorm:"foreignKey:SectionId;"`
+	Lectures        []*Lecture                    `json:"lectures" gorm:"foreignKey:SectionId;"`
 }
 
 func (Section) TableName() string { return "sections" }

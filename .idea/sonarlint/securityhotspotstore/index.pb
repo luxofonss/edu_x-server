@@ -219,12 +219,8 @@ g
 7modules/course/repository/postgresql/subject_get_all.go,5\1\51b3052e1f4586864aa309873aed8ddcbd309904
 _
 /modules/course/transport/gin/subject_get_all.go,f\f\ffa7c8a5794c10e33149ed11388122ce7fb7a921
-T
-$modules/course/biz/course_get_all.go,8\c\8ceea1b99edf43662402c283f0728aa27f8d6769
 N
 modules/course/model/filter.go,9\1\913d4e0fcf8ef885ca3a104d8776d88f8ac9821a
-s
-Cmodules/course/repository/postgresql/course_find_all_for_teacher.go,8\c\8cb8606b57b4d2a36ff48e6c082f670d04118d88
 @
 common/paging.go,5\5\55a0277d4cd1a8297e614d95e90169077018b114
 `
@@ -233,3 +229,15 @@ i
 9modules/course/transport/gin/course_teacher_get_course.go,4\f\4f2598b1c5c15b84a23cd91af7b0d29dc78424f8
 q
 Amodules/course/repository/postgresql/course_get_with_condition.go,f\0\f057811a6daebd5dada9bfabdecf4da2595c7f69
+V
+&modules/course/biz/course_get_by_id.go,1\a\1abb8976697c8e1f06e5fd87240fee3ca41d9078
+d
+4modules/course/transport/gin/course_get_one_by_id.go,8\2\8226593b398f5365fe66556a8faeeb05c6555468
+b
+2modules/course/biz/course_get_sections_lectures.go,2\0\202f6000b78248ff5e87ae6ef96f87713e25fe9c
+l
+<modules/course/transport/gin/course_get_sections_lectures.go,e\5\e536f8602895df18a0a7067cf7d7c14e7eded139
+L
+mode/assignment_placement.go,5\e\5ecdd675a355bff8490fdac8cea12897eb29a999
+M
+model/assignment_placement.go,3\e\3eabe208c90309078fdfe4c2900889efb7ccb7bb

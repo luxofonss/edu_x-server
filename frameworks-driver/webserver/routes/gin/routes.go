@@ -38,7 +38,10 @@ func SetupRoutes(ctx appctx.AppContext, r *gin.RouterGroup) {
 	r.POST("/courses/:courseId/section/:sectionId/lecture", middleware.RequiredTeacher(ctx), gincourse.CreateLecture(ctx))
 
 	r.GET("/courses/mine", middleware.RequiredTeacher(ctx), gincourse.GetAllCourses(ctx))
+	r.GET("/courses/:courseId", gincourse.GetCourseById(ctx))
 	r.GET("/courses/:courseId/assignments", gincourse.GetAllAssignments(ctx))
+
+	r.GET("/courses/:courseId/sections", gincourse.GetCourseSectionLecture(ctx))
 	r.GET("/courses/:courseId/section/:sectionId/assignments", gincourse.GetAllAssignmentsInSection(ctx))
 	r.GET("/courses/:courseId/section/:sectionId/lecture/:lectureId/assignments", gincourse.GetAllAssignmentsInLecture(ctx))
 

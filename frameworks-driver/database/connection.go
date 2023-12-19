@@ -15,7 +15,7 @@ type DBConfig struct {
 	Host               string // Database host.
 	Port               string // Database port.
 	Type               string // Type of the database ("mysql", "postgres", "mssql", etc.).
-	SSLMode            string // SSL mode for the database connection.
+	SSLMode            string // SSL model for the database connection.
 	TimeZone           string // Time zone for the database.
 }
 
