@@ -12,7 +12,6 @@ type QuestionChoice struct {
 	Content         string    `json:"content" gorm:"column:content;"`
 	Order           int       `json:"order" gorm:"column:order;"`
 	IsCorrect       bool      `json:"is_correct" gorm:"column:is_correct;"`
-	AnswerExplain   string    `json:"answer_explain" gorm:"column:answer_explain;"`
 	QuestionId      uuid.UUID `json:"question_id" gorm:"column:question_id;type:uuid;"`
 	Question        *Question `json:"question" gorm:"foreignKey:QuestionId;"`
 }

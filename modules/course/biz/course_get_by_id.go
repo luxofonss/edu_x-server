@@ -14,7 +14,7 @@ type CourseGetOneRepo interface {
 		filter *coursemodel.Filter,
 		paging *common.Paging,
 		moreKeys ...string,
-	) ([]coursemodel.CourseGet, error)
+	) ([]*coursemodel.CourseGet, error)
 }
 
 type getOneCourseByIdBiz struct {
@@ -37,5 +37,5 @@ func (biz *getOneCourseByIdBiz) GetOneCourseById(ctx context.Context, courseId u
 		return nil, common.ErrEntityNotFound(coursemodel.CourseEntityName, nil)
 	}
 
-	return &course[0], nil
+	return course[0], nil
 }

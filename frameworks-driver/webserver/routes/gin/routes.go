@@ -32,6 +32,9 @@ func SetupRoutes(ctx appctx.AppContext, r *gin.RouterGroup) {
 	// Upload files
 	r.POST("/upload", middleware.RequiredAuth(ctx), uploadgin.Upload(ctx))
 
+	// Course student management
+	r.POST("/courses/attempt", gincourse.UserEnrollCourse(ctx))
+
 	// Course
 	r.POST("/courses", middleware.RequiredTeacher(ctx), gincourse.CreateCourse(ctx))
 	r.POST("/courses/:courseId/section", middleware.RequiredTeacher(ctx), gincourse.CreateSection(ctx))
@@ -48,6 +51,9 @@ func SetupRoutes(ctx appctx.AppContext, r *gin.RouterGroup) {
 	// Assigment
 	r.GET("/assignment/:id", middleware.RequiredAuth(ctx), assignmentgin.GetAssignment(ctx))
 	r.POST("/assignment", middleware.RequiredTeacher(ctx), assignmentgin.CreateAssignment(ctx))
+
+	// recognize assignment
+	r.POST("/assignment/recognize", assignmentgin.RecognizeAssignment(ctx))
 
 	// attempt an assignment in any course/lecture/section or in any public assignment
 	r.POST("/assignment/attempt", middleware.RequiredAuth(ctx), assignmentgin.AttemptAssignment(ctx))

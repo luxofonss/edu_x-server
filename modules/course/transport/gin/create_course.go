@@ -2,12 +2,12 @@ package gincourse
 
 import (
 	"net/http"
+	coursedto "server/modules/course/dto"
 
 	"github.com/gin-gonic/gin"
 	"server/common"
 	"server/libs/appctx"
 	coursebiz "server/modules/course/biz"
-	coursemodel "server/modules/course/model"
 	coursepg "server/modules/course/repository/postgresql"
 )
 
@@ -15,7 +15,8 @@ func CreateCourse(appCtx appctx.AppContext) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ownerId := c.MustGet(common.CurrentUser).(common.Requester)
 
-		var data *coursemodel.Course
+		//var data *coursemodel.Course
+		var data *coursedto.CourseCreateRequest
 		if err := c.ShouldBind(&data); err != nil {
 			panic(common.ErrInvalidRequest(err))
 		}

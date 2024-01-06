@@ -13,7 +13,7 @@ type CourseGetSectionLectureRepo interface {
 		filter *coursemodel.Filter,
 		paging *common.Paging,
 		moreKeys ...string,
-	) ([]coursemodel.CourseGet, error)
+	) ([]*coursemodel.CourseGet, error)
 }
 
 type getSectionLectureBiz struct {

@@ -2,6 +2,7 @@ package server
 
 import (
 	"net/http"
+	assignmentrecognizeprovider "server/libs/assignment_recognize_provider"
 
 	"github.com/labstack/echo/v4"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -12,9 +13,10 @@ import (
 )
 
 type EchoServerConf struct {
-	sqlDb          *gorm.DB
-	mongoDb        *mongo.Client
-	uploadProvider uploadprovider.Provider
+	sqlDb                       *gorm.DB
+	mongoDb                     *mongo.Client
+	uploadProvider              uploadprovider.Provider
+	assignmentRecognizeProvider assignmentrecognizeprovider.Provider
 }
 
 func (e *EchoServerConf) CreateServer() interface{} {
@@ -25,7 +27,7 @@ func (e *EchoServerConf) CreateServer() interface{} {
 		return c.String(http.StatusOK, "Hello, Echo!")
 	})
 
-	appContext := appctx.NewAppContext(e.sqlDb, e.mongoDb, e.uploadProvider)
+	appContext := appctx.NewAppContext(e.sqlDb, e.mongoDb, e.uploadProvider, e.assignmentRecognizeProvider)
 
 	echoroutes.SetupRoutes(appContext, echoRouter)
 

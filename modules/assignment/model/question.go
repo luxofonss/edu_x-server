@@ -10,7 +10,7 @@ const QuestionEntityName = "Question"
 type QuestionType string
 
 const (
-	MultipleChoice QuestionType = "multiple_choice"
+	MultipleChoice QuestionType = "multi_choice"
 	SingleChoice   QuestionType = "single_choice"
 	ShortAnswer    QuestionType = "short_answer"
 	LongAnswer     QuestionType = "long_answer"
@@ -33,6 +33,7 @@ type Question struct {
 	AudioUrl        string                   `json:"audio_url" gorm:"column:audio_url;"`
 	Type            QuestionType             `json:"type" gorm:"column:type;"`
 	Level           QuestionLevel            `json:"level" gorm:"column:level;"`
+	AnswerExplain   string                   `json:"answer_explain" gorm:"column:answer_explain;"`
 	AssignmentId    uuid.UUID                `json:"assignment_id" gorm:"column:assignment_id;type:uuid;"`
 	TeacherId       uuid.UUID                `json:"teacher_id" gorm:"column:teacher_id;type:uuid;default:NULL;"`
 	SchoolId        uuid.UUID                `json:"school_id" gorm:"column:school_id;type:uuid;default:NULL;"`

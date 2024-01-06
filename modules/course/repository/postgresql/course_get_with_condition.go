@@ -2,6 +2,7 @@ package coursepg
 
 import (
 	"context"
+	"fmt"
 	"github.com/google/uuid"
 	"server/common"
 	coursemodel "server/modules/course/model"
@@ -12,16 +13,23 @@ func (repo *courseRepo) GetCourseWithCondition(
 	filter *coursemodel.Filter,
 	paging *common.Paging,
 	moreKeys ...string,
-) ([]coursemodel.CourseGet, error) {
+) ([]*coursemodel.CourseGet, error) {
 	db := repo.db.Table(coursemodel.Course{}.TableName())
 
-	if v := filter; v != nil {
-		if v.TeacherId != uuid.Nil {
-			db = db.Where("teacher_id = ?", v.TeacherId)
+	if filter != nil {
+		if filter.TeacherId != uuid.Nil {
+			db = db.Where("teacher_id = ?", filter.TeacherId)
 		}
 
-		if v.Id != uuid.Nil {
-			db = db.Where("id = ?", v.Id)
+		if filter.Id != uuid.Nil {
+			db = db.Where("id = ?", filter.Id)
+		}
+
+		fmt.Println(filter)
+
+		if filter.Code != nil {
+
+			db = db.Where("code = ?", *filter.Code)
 		}
 	}
 
@@ -29,7 +37,9 @@ func (repo *courseRepo) GetCourseWithCondition(
 		db = db.Preload(moreKeys[i])
 	}
 
-	var courses []coursemodel.CourseGet
+	fmt.Println("here")
+
+	var courses []*coursemodel.CourseGet
 	if err := db.Offset((paging.Page - 1) * paging.Limit).Limit(paging.Limit).Find(&courses).Error; err != nil {
 		return nil, common.ErrDB(err)
 	}

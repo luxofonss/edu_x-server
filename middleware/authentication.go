@@ -31,16 +31,16 @@ func RequiredAuth(ctx appctx.AppContext) func(c *gin.Context) {
 	tokenProvider := jwt.NewTokenJWTProvider(ctx.GetSecretKey())
 
 	return func(c *gin.Context) {
-		var token string
-		token, err := extractTokenFromHeaderString(c.GetHeader("Authorization"))
-
-		if err != nil {
-			panic(err)
-		}
-		//token, err := c.Cookie("token")
+		//var token string
+		//token, err := extractTokenFromHeaderString(c.GetHeader("Authorization"))
+		//
 		//if err != nil {
 		//	panic(err)
 		//}
+		token, err := c.Cookie("token")
+		if err != nil {
+			panic(err)
+		}
 
 		db := ctx.GetMainSQLDbConnection()
 		repo := userpostgres.NewUserRepo(db)

@@ -7,6 +7,7 @@ import (
 	"os"
 	"server/frameworks-driver/database"
 	"server/frameworks-driver/webserver/server"
+	assignmentrecognizeprovider "server/libs/assignment_recognize_provider"
 	uploadprovider "server/libs/upload_provider"
 )
 
@@ -70,9 +71,11 @@ func main() {
 	s3SecretKey := os.Getenv("S3_SECRET_KEY")
 	s3Domain := os.Getenv("S3_DOMAIN")
 
-	uploadProvider := uploadprovider.NewS3Provider(s3BucketName, s3Region, s3APIKey, s3SecretKey, s3Domain)
+	gptApiKey := os.Getenv("GPT_API_KEY")
 
-	ginServer := server.NewServerFactory("gin", postgresDb, nil, uploadProvider)
+	uploadProvider := uploadprovider.NewS3Provider(s3BucketName, s3Region, s3APIKey, s3SecretKey, s3Domain)
+	assignmentRecognizeProvider := assignmentrecognizeprovider.NewChatGptProvider(gptApiKey)
+	ginServer := server.NewServerFactory("gin", postgresDb, nil, uploadProvider, assignmentRecognizeProvider)
 	router := ginServer.CreateServer()
 	appRouter := router.(*gin.Engine)
 

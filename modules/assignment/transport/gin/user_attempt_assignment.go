@@ -13,11 +13,14 @@ import (
 
 func AttemptAssignment(appCtx appctx.AppContext) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		requester := c.MustGet(common.CurrentUser).(common.Requester)
+
 		var data assignmentmodel.AssignmentAttemptCreate
 
 		if err := c.ShouldBindJSON(&data); err != nil {
 			panic(err)
 		}
+		data.UserId = requester.GetUserId()
 
 		db := appCtx.GetMainSQLDbConnection()
 		assignmentRepo := assignmentrepo.NewAssignmentRepo(db)

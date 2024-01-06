@@ -8,14 +8,16 @@ import (
 	ginrecover "server/frameworks-driver/webserver/middlewares/gin"
 	"server/frameworks-driver/webserver/routes/gin"
 	"server/libs/appctx"
+	assignmentrecognizeprovider "server/libs/assignment_recognize_provider"
 	uploadprovider "server/libs/upload_provider"
 	"time"
 )
 
 type GinServerConf struct {
-	sqlDb          *gorm.DB
-	mongoDb        *mongo.Client
-	uploadProvider uploadprovider.Provider
+	sqlDb                       *gorm.DB
+	mongoDb                     *mongo.Client
+	uploadProvider              uploadprovider.Provider
+	assignmentRecognizeProvider assignmentrecognizeprovider.Provider
 }
 
 func (g *GinServerConf) CreateServer() interface{} {
@@ -30,7 +32,7 @@ func (g *GinServerConf) CreateServer() interface{} {
 		MaxAge:           12 * time.Hour,
 	}))
 
-	appContext := appctx.NewAppContext(g.sqlDb, g.mongoDb, g.uploadProvider)
+	appContext := appctx.NewAppContext(g.sqlDb, g.mongoDb, g.uploadProvider, g.assignmentRecognizeProvider)
 	ginRouter.Use(ginrecover.Recover(appContext))
 
 	v1 := ginRouter.Group("/v1")
