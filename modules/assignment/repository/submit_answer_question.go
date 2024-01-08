@@ -16,9 +16,6 @@ func (repo *assignmentRepo) SubmitQuestionAnswer(ctx context.Context, data *assi
 	}).Create(&data).Error; err != nil {
 		return nil, common.ErrCannotCreateEntity(assignmentmodel.QuestionAnswerEntityName, err)
 	}
-	//if err := db.Create(&data).Error; err != nil {
-	//	return nil, common.ErrCannotCreateEntity(assignmentmodel.QuestionAnswerEntityName, err)
-	//}
 
 	return data, nil
 

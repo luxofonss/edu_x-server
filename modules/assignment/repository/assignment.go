@@ -2,12 +2,25 @@ package assignmentrepo
 
 import (
 	"context"
-
 	"github.com/google/uuid"
 	assignmentmodel "server/modules/assignment/model"
 )
 
-func (repo *assignmentRepo) GetAssignment(ctx context.Context, id uuid.UUID) (*assignmentmodel.Assignment, error) {
+// CREATE
+func (repo *assignmentRepo) CreateAssignment(ctx context.Context, data *assignmentmodel.AssignmentCreate, teacherId uuid.UUID) error {
+	data.TeacherId = teacherId
+	//data.SchoolId.UUID = uuid.Nil
+
+	db := repo.db.Table(assignmentmodel.AssignmentCreate{}.TableName())
+	if err := db.Create(&data).Error; err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// GET
+func (repo *assignmentRepo) GetAssignmentById(ctx context.Context, id uuid.UUID) (*assignmentmodel.Assignment, error) {
 	db := repo.db.Table(assignmentmodel.Assignment{}.TableName())
 	var data assignmentmodel.Assignment
 

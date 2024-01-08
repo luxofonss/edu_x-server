@@ -21,6 +21,7 @@ type Assignment struct {
 	Description       string               `json:"description" gorm:"column:description;"`
 	TotalPoint        int                  `json:"total_point" gorm:"column:total_point;"`
 	MultipleAttempt   bool                 `json:"multiple_attempt" gorm:"column:multiple_attempt;"`
+	Time              int                  `json:"time" gorm:"column:time;"`
 	StartTime         *string              `json:"start_time" gorm:"column:start_time;"`
 	EndTime           *string              `json:"end_time" gorm:"column:end_time;"`
 	Type              AssignmentType       `json:"type" gorm:"column:type;"`
@@ -37,6 +38,7 @@ func (Assignment) TableName() string { return "assignments" }
 type AssignmentCreate struct {
 	Assignment      `,json:"inline"`
 	MultipleAttempt bool           `json:"multiple_attempt" gorm:"column:multiple_attempt;"`
+	Time            *int           `json:"time" gorm:"column:time;"`
 	StartTime       *string        `json:"start_time" gorm:"column:start_time;"`
 	EndTime         *string        `json:"end_time" gorm:"column:end_time;"`
 	Type            AssignmentType `json:"type" gorm:"column:type;"`

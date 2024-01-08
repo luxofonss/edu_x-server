@@ -26,6 +26,9 @@ func SetupRoutes(ctx appctx.AppContext, r *gin.RouterGroup) {
 	// Subject apis
 	r.GET("/subjects", gincourse.GetAllSubject(ctx))
 
+	// Courses
+	r.GET("/courses/active", gincourse.GetAllActiveCourse(ctx))
+
 	r.Use(middleware.RequiredAuth(ctx))
 	r.GET("/user/profile", ginuser.GetProfile(ctx))
 
@@ -41,12 +44,18 @@ func SetupRoutes(ctx appctx.AppContext, r *gin.RouterGroup) {
 	r.POST("/courses/:courseId/section/:sectionId/lecture", middleware.RequiredTeacher(ctx), gincourse.CreateLecture(ctx))
 
 	r.GET("/courses/mine", middleware.RequiredTeacher(ctx), gincourse.GetAllCourses(ctx))
+	r.GET("/courses/:courseId/enrollments", middleware.RequiredTeacher(ctx), gincourse.GetAllCourseEnrollments(ctx))
 	r.GET("/courses/:courseId", gincourse.GetCourseById(ctx))
 	r.GET("/courses/:courseId/assignments", gincourse.GetAllAssignments(ctx))
 
 	r.GET("/courses/:courseId/sections", gincourse.GetCourseSectionLecture(ctx))
 	r.GET("/courses/:courseId/section/:sectionId/assignments", gincourse.GetAllAssignmentsInSection(ctx))
 	r.GET("/courses/:courseId/section/:sectionId/lecture/:lectureId/assignments", gincourse.GetAllAssignmentsInLecture(ctx))
+
+	r.GET("/courses/my-enrolled", gincourse.GetAllMyEnrolledCourses(ctx))
+
+	// Course enroll manage
+	r.PUT("/courses/enrolls", gincourse.UpdateCourseEnroll(ctx))
 
 	// Assigment
 	r.GET("/assignment/:id", middleware.RequiredAuth(ctx), assignmentgin.GetAssignment(ctx))
@@ -60,4 +69,8 @@ func SetupRoutes(ctx appctx.AppContext, r *gin.RouterGroup) {
 
 	// do assignment
 	r.POST("/assignment-attempt/:assignmentAttemptId/question/:questionId/answer", middleware.RequiredAuth(ctx), assignmentgin.SubmitQuestionAnswer(ctx))
+
+	// feedback
+	r.POST("/assignment-attempt/:assignmentAttemptId/answer/:questionAnswerId/feedback", middleware.RequiredAuth(ctx), assignmentgin.CreateFeedbackAnswer(ctx))
+	r.GET("/answer/:answerId/feedbacks", middleware.RequiredAuth(ctx), assignmentgin.GetFeedbacksByAnswerId(ctx))
 }

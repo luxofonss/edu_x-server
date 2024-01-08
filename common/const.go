@@ -1,6 +1,8 @@
 package common
 
-import "github.com/google/uuid"
+import (
+	"github.com/google/uuid"
+)
 
 const (
 	DbTypeCourse            = 1
@@ -23,3 +25,5 @@ type Requester interface {
 	GetUserId() uuid.UUID
 	GetEmail() string
 }
+
+const DateString = "2006-01-02 15:04:05.999999 -0700 MST"

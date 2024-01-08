@@ -9,6 +9,7 @@ create type question_type as ENUM('single_choice','multi_choice','short_answer',
 create type learner_type as ENUM('student','pupil','other');
 create type supervisor_relationship as ENUM('mother', 'father', 'sister','brother','other');
 create type auth_types as ENUM('email_pwd', 'facebook', 'google');
+create type enroll_status as enum ('PENDING', 'ACTIVE', 'INACTIVE');
 
 alter type level add value 'beginner'
 
@@ -236,6 +237,7 @@ create table "user_enroll_course" (
     FOREIGN KEY ("user_id") REFERENCES "users" ("id"),
     FOREIGN KEY ("course_id") REFERENCES "courses" ("id")
 );
+alter table user_enroll_course add column status enroll_status default 'PENDING';
 
 DROP table IF exists "course_infos" CASCADE;
 CREATE TABLE "course_infos" (
@@ -326,6 +328,7 @@ CREATE TABLE "assignments" (
   "created_at" timestamp DEFAULT CURRENT_TIMESTAMP,
   "updated_at" timestamp DEFAULT CURRENT_TIMESTAMP
 );
+alter table assignments add column time int; 
 
 --
 --DROP table IF exists "assignment_placement";
@@ -362,6 +365,7 @@ CREATE TABLE "assignment_attempts" (
   "updated_at" timestamp DEFAULT CURRENT_TIMESTAMP,
   constraint check_assignment check (assignment_id is not null)
 );
+alter table assignment_attempts add column assignment_time_millis integer;
 
 DROP table IF exists "questions" CASCADE;
 CREATE TABLE "questions" (
@@ -405,7 +409,7 @@ create table "question_answers" (
     user_id uuid not null references users(id),
     question_id uuid not null references questions(id),
     assignment_attempt_id uuid not null references assignment_attempts("id"),
-    	 uuid references question_choices(id), -- Store the ID of the selected option for multiple/single choice questions
+    selected_option_id uuid references question_choices(id), -- Store the ID of the selected option for multiple/single choice questions
     text_answer TEXT, -- For short/long answer questions
     constraint check_only_one_answer check (
     	(selected_option_id is not null and text_answer is null)  or 
@@ -417,8 +421,21 @@ create table "question_answers" (
 );
 alter table question_answers  add constraint unique_question_attempt_user 
         UNIQUE (question_id, assignment_attempt_id, user_id)
-
 alter table question_answers drop constraint check_only_one_answer;
+
+-- feedback for long answer
+DROP table IF exists "feedbacks" CASCADE;
+CREATE TABLE "feedbacks" (
+  "id" uuid not null primary key default uuid_generate_v4(),
+  "message" text not null,
+  "user_id" uuid not null references users(id),
+  "question_answer_id" uuid  not null references question_answers(id),
+  "feedback_id" uuid references feedbacks(id), -- target feedback
+  "deleted_at" timestamp default NULL,
+  "created_at" timestamp DEFAULT CURRENT_TIMESTAMP,
+  "updated_at" timestamp DEFAULT CURRENT_TIMESTAMP
+);
+
 
 drop table if exists "correct_answers" cascade;
 create table "correct_answers" (

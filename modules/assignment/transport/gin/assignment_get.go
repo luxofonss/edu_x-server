@@ -25,7 +25,7 @@ func GetAssignment(appCtx appctx.AppContext) gin.HandlerFunc {
 		assignmentRepo := assignmentrepo.NewAssignmentRepo(db)
 		biz := assignmentbiz.NewAssignmentGetBiz(assignmentRepo)
 
-		assignment, err := biz.GetAssignment(c.Request.Context(), uid)
+		assignment, err := biz.GetAssignmentById(c.Request.Context(), uid)
 		if err != nil {
 			panic(err)
 		}

@@ -6,6 +6,7 @@ import (
 	"github.com/google/uuid"
 	"server/common"
 	coursemodel "server/modules/course/model"
+	"time"
 )
 
 func (repo *courseRepo) GetCourseWithCondition(
@@ -25,11 +26,14 @@ func (repo *courseRepo) GetCourseWithCondition(
 			db = db.Where("id = ?", filter.Id)
 		}
 
-		fmt.Println(filter)
-
 		if filter.Code != nil {
 
 			db = db.Where("code = ?", *filter.Code)
+		}
+
+		if filter.Status == "active" {
+			currentDate := time.Now()
+			db = db.Where("? < end_date", currentDate)
 		}
 	}
 

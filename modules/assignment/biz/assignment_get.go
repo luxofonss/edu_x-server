@@ -9,7 +9,7 @@ import (
 )
 
 type AssignmentGetRepo interface {
-	GetAssignment(ctx context.Context, id uuid.UUID) (*assignmentmodel.Assignment, error)
+	GetAssignmentById(ctx context.Context, id uuid.UUID) (*assignmentmodel.Assignment, error)
 }
 
 type assignmentGetBiz struct {
@@ -20,11 +20,10 @@ func NewAssignmentGetBiz(assignmentGetRepo AssignmentGetRepo) *assignmentGetBiz 
 	return &assignmentGetBiz{assignmentGetRepo: assignmentGetRepo}
 }
 
-func (biz *assignmentGetBiz) GetAssignment(ctx context.Context, id uuid.UUID) (*assignmentmodel.Assignment, error) {
-	assignment, err := biz.assignmentGetRepo.GetAssignment(ctx, id)
+func (biz *assignmentGetBiz) GetAssignmentById(ctx context.Context, id uuid.UUID) (*assignmentmodel.Assignment, error) {
+	assignment, err := biz.assignmentGetRepo.GetAssignmentById(ctx, id)
 	if err != nil {
 		return nil, common.ErrCannotGetEntity(assignmentmodel.Assignment{}.TableName(), err)
 	}
-
 	return assignment, nil
 }
