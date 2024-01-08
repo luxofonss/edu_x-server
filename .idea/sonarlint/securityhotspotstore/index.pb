@@ -297,3 +297,9 @@ m
 =modules/assignment/transport/gin/feedback_get_by_answer_id.go,1\f\1f9bff37db6b9bf4ca7d2633da6c7307c3a0ded3
 [
 +modules/assignment/repository/assignment.go,7\6\76c3dd5b10232b90a7844adb142be9cb9d10bf8d
+c
+3modules/assignment/repository/assignment_attempt.go,0\7\07ac79bccb6d60e3e97ffbb1d3c9e2799341ac8f
+Y
+)modules/assignment/repository/feedback.go,9\4\94b78aaf8331e03db85f96f02c9d31428be84597
+Y
+)modules/assignment/repository/question.go,5\1\51deda60ed086545c43ce4e02db6c0d83379526e

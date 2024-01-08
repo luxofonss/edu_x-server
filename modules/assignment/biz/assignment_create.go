@@ -10,8 +10,6 @@ import (
 
 type AssignmentRepo interface {
 	CreateAssignment(ctx context.Context, data *assignmentmodel.AssignmentCreate, teacherId uuid.UUID) error
-	CreateChoice(ctx context.Context, data *assignmentmodel.QuestionChoice) error
-	CreateCorrectAnswer(ctx context.Context, data *assignmentmodel.QuestionCorrectAnswer) error
 	CreateQuestion(ctx context.Context, data *assignmentmodel.Question) (*assignmentmodel.Question, error)
 }
 
