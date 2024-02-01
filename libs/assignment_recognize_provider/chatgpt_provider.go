@@ -7,7 +7,6 @@ import (
 )
 
 const (
-	apiKey      = "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"
 	apiEndpoint = "https://api.openai.com/v1/chat/completions"
 )
 
@@ -27,7 +26,7 @@ func (gpt *chatGptProvider) RecognizeAssignment(ctx context.Context, data map[st
 	fmt.Println("running chat gpt provider")
 
 	response, err := client.R().
-		SetAuthToken(apiKey).
+		SetAuthToken(gpt.apiKey).
 		SetHeader("Content-Type", "application/json").
 		SetBody(map[string]interface{}{
 			"model":      "gpt-3.5-turbo",

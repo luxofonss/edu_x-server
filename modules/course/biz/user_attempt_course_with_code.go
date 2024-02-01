@@ -16,7 +16,7 @@ type CourseAttemptByCodeRepo interface {
 		filter *coursemodel.Filter,
 		paging *common.Paging,
 		moreKeys ...string,
-	) ([]*coursemodel.CourseGet, error)
+	) ([]*coursemodel.Course, error)
 }
 
 type courseAttemptByCodeBiz struct {
@@ -38,7 +38,7 @@ func (biz *courseAttemptByCodeBiz) AttemptCourseByCode(ctx context.Context, code
 
 	fmt.Println(course[0].UserEnrollments)
 	if &course[0].EndDate != nil {
-		if common.CompareTimeNow(course[0].EndDate) {
+		if common.CompareTimeNow(*course[0].EndDate) {
 			return false, errors.New("Course expired!")
 		}
 	}

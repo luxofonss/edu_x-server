@@ -2,7 +2,6 @@ package coursebiz
 
 import (
 	"context"
-	"fmt"
 	"github.com/google/uuid"
 	coursemodel "server/modules/course/model"
 )
@@ -25,12 +24,12 @@ func (biz *getAllMyEnrollmentsCourseBiz) GetAllMyEnrollments(ctx context.Context
 		return nil, err
 	}
 
-	fmt.Println("enrollments:: ", enrollments[0].Course)
-
 	var courses []coursemodel.Course
 	for _, enrollment := range enrollments {
 
-		courses = append(courses, *enrollment.Course)
+		if enrollment.Status == coursemodel.ACTIVE {
+			courses = append(courses, *enrollment.Course)
+		}
 	}
 
 	return courses, nil

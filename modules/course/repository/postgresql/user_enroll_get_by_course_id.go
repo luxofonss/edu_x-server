@@ -7,7 +7,9 @@ import (
 
 func (repo *courseRepo) GetAllCourseEnrollmentsByCourseId(courseId uuid.UUID) ([]*coursemodel.UserEnrollCourse, error) {
 	var result []*coursemodel.UserEnrollCourse
-	if err := repo.db.Table(coursemodel.UserEnrollCourse{}.TableName()).Where("course_id = ?", courseId).Find(&result).Error; err != nil {
+	db := repo.db.Table(coursemodel.UserEnrollCourse{}.TableName())
+	db.Preload("User")
+	if err := db.Where("course_id = ?", courseId).Find(&result).Error; err != nil {
 		return nil, err
 	}
 

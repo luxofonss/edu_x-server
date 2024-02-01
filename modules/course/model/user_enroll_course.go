@@ -16,13 +16,14 @@ const (
 )
 
 type UserEnrollCourse struct {
-	common.SimpleSqlModel `json:",inline"`
-	UserId                uuid.UUID     `json:"user_id" gorm:"primaryKey;column:user_id;"`
-	CourseId              uuid.UUID     `json:"course_id" gorm:"primaryKey;column:course_id;"`
-	Price                 float64       `json:"price" gorm:"column:price;"`
-	StudentId             *int          `json:"student_id" gorm:"column:student_id;"`
-	Status                *EnrollStatus `json:"status" gorm:"column:status;default:PENDING;"`
-	Course                *Course       `json:"course" gorm:"foreignKey:CourseId;"`
+	common.SQLModel `json:",inline"`
+	UserId          uuid.UUID          `json:"user_id" gorm:"primaryKey;column:user_id;"`
+	CourseId        uuid.UUID          `json:"course_id" gorm:"primaryKey;column:course_id;"`
+	Price           float64            `json:"price" gorm:"column:price;"`
+	StudentId       *int               `json:"student_id" gorm:"column:student_id;"`
+	Status          EnrollStatus       `json:"status" gorm:"column:status;default:PENDING;"`
+	Course          *Course            `json:"course" gorm:"foreignKey:CourseId;"`
+	User            *common.SimpleUser `json:"user" gorm:"foreignKey:UserId;"`
 }
 
 func (UserEnrollCourse) TableName() string { return "user_enroll_course" }

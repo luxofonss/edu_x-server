@@ -2,9 +2,11 @@ package assignmentbiz
 
 import (
 	"context"
+	"fmt"
 	"github.com/google/uuid"
 	"server/common"
 	assignmentmodel "server/modules/assignment/model"
+	"time"
 )
 
 type AttemptAssignmentRepo interface {
@@ -25,22 +27,41 @@ func (biz *assignmentAttemptBiz) AttemptAssignment(
 	ctx context.Context,
 	data *assignmentmodel.AssignmentAttemptCreate,
 ) (*assignmentmodel.AssignmentAttempt, error) {
-	var canMultipleAttempt bool = true
-
 	assignment, err := biz.attemptAssignmentRepo.GetAssignmentById(ctx, data.AssignmentId)
-	if assignment.MultipleAttempt == false {
-		canMultipleAttempt = false
+
+	allAttempts, err := biz.attemptAssignmentRepo.GetAllAttemptInAssignment(ctx, data.AssignmentId, data.UserId)
+	if err != nil {
+		return nil, err
 	}
-	if !canMultipleAttempt {
-		allAttempts, err := biz.attemptAssignmentRepo.GetAllAttemptInAssignment(ctx, data.AssignmentId, data.UserId)
-		if err != nil {
-			return nil, err
+
+	fmt.Println("allAttempts:: ", allAttempts)
+
+	if len(allAttempts) > 0 {
+		lastAttempt := allAttempts[len(allAttempts)-1]
+		assignmentTimeMillis := lastAttempt.AssignmentTimeMillis
+
+		fmt.Println("assignmentTimeMillis:: ", assignmentTimeMillis)
+
+		if assignmentTimeMillis != 0 {
+			assignmentCreatedAt, err := time.Parse(common.DateString, lastAttempt.CreatedAt.String())
+			if err != nil {
+				return nil, err
+			}
+
+			maxSubmitTime := assignmentCreatedAt.Add(time.Duration(assignmentTimeMillis) * time.Millisecond)
+
+			if time.Now().Before(maxSubmitTime) {
+				return &lastAttempt, nil
+			}
+
 		}
 
-		if len(allAttempts) > 0 {
+		if !assignment.MultipleAttempt {
 			return nil, common.NewCustomError(err, "You can attempt this assignment one time!", "CREATE_ASSIGMENT")
 		}
 	}
+
+	fmt.Println("add new attempt")
 
 	data.AssignmentTimeMillis = int64(assignment.Time) * 60 * 1000 // convert minute to millisecond (1 minute = 60 second = 60 * 1000 millisecond
 

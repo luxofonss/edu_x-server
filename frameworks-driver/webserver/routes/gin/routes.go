@@ -28,7 +28,9 @@ func SetupRoutes(ctx appctx.AppContext, r *gin.RouterGroup) {
 
 	// Courses
 	r.GET("/courses/active", gincourse.GetAllActiveCourse(ctx))
+	r.GET("/courses/:courseId", gincourse.GetCourseById(ctx))
 
+	// REQUIRED AUTH APIS
 	r.Use(middleware.RequiredAuth(ctx))
 	r.GET("/user/profile", ginuser.GetProfile(ctx))
 
@@ -45,7 +47,7 @@ func SetupRoutes(ctx appctx.AppContext, r *gin.RouterGroup) {
 
 	r.GET("/courses/mine", middleware.RequiredTeacher(ctx), gincourse.GetAllCourses(ctx))
 	r.GET("/courses/:courseId/enrollments", middleware.RequiredTeacher(ctx), gincourse.GetAllCourseEnrollments(ctx))
-	r.GET("/courses/:courseId", gincourse.GetCourseById(ctx))
+
 	r.GET("/courses/:courseId/assignments", gincourse.GetAllAssignments(ctx))
 
 	r.GET("/courses/:courseId/sections", gincourse.GetCourseSectionLecture(ctx))
@@ -64,6 +66,9 @@ func SetupRoutes(ctx appctx.AppContext, r *gin.RouterGroup) {
 	// recognize assignment
 	r.POST("/assignment/recognize", assignmentgin.RecognizeAssignment(ctx))
 
+	r.GET("/teacher/assignment/attempt/get-all-attempts", middleware.RequiredAuth(ctx), assignmentgin.GetAllAssignmentAttemptByAssignmentId(ctx))
+	r.GET("/assignment/attempt/:id", middleware.RequiredAuth(ctx), assignmentgin.GetAssignmentAttemptById(ctx))
+	r.GET("/assignment/attempt-result/:id", middleware.RequiredAuth(ctx), assignmentgin.GetAssignmentAttemptResultById(ctx))
 	// attempt an assignment in any course/lecture/section or in any public assignment
 	r.POST("/assignment/attempt", middleware.RequiredAuth(ctx), assignmentgin.AttemptAssignment(ctx))
 

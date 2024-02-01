@@ -7,6 +7,7 @@ import (
 	"server/common"
 	"server/libs/appctx"
 	coursebiz "server/modules/course/biz"
+	coursedto "server/modules/course/dto"
 	coursepg "server/modules/course/repository/postgresql"
 )
 
@@ -29,6 +30,8 @@ func GetCourseById(appCtx appctx.AppContext) gin.HandlerFunc {
 			panic(err)
 		}
 
-		c.JSON(http.StatusOK, common.SimpleSuccessResponse(res))
+		result := coursedto.ToDetailCourseResponse(*res)
+
+		c.JSON(http.StatusOK, common.SimpleSuccessResponse(result))
 	}
 }

@@ -22,17 +22,12 @@ func UpdateCourseEnroll(appCtx appctx.AppContext) gin.HandlerFunc {
 		courseRepo := coursepg.NewCourseRepo(db)
 		updateCourseEnrollBiz := coursebiz.NewUpdateCourseEnrollStatusBiz(courseRepo)
 
-		courseId, err := uuid.Parse(courseEnrollUpdateRequest.CourseId)
+		courseEnrollId, err := uuid.Parse(courseEnrollUpdateRequest.CourseEnrollId)
 		if err != nil {
 			panic(err)
 		}
 
-		userId, err := uuid.Parse(courseEnrollUpdateRequest.UserId)
-		if err != nil {
-			panic(err)
-		}
-
-		err = updateCourseEnrollBiz.UpdateCourseEnrollStatus(courseId, userId, courseEnrollUpdateRequest.Status)
+		err = updateCourseEnrollBiz.UpdateCourseEnrollStatus(courseEnrollId, courseEnrollUpdateRequest.Status)
 		if err != nil {
 			panic(err)
 		}

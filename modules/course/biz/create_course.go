@@ -2,8 +2,6 @@ package coursebiz
 
 import (
 	"context"
-	"fmt"
-
 	"github.com/google/uuid"
 	"server/common"
 	coursedto "server/modules/course/dto"
@@ -32,8 +30,6 @@ func (biz *createCourseBiz) CreateCourse(ctx context.Context, data *coursedto.Co
 	course.TeacherId = teacherId
 	course.IsVerified = false
 	course.Code = common.GenCourseCode(6)
-
-	fmt.Println("course:", course)
 
 	createdCourse, err := biz.courseRepo.CreateCourse(ctx, course)
 	if err != nil {

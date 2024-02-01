@@ -12,7 +12,7 @@ type CourseGetAllActiveRepo interface {
 		filter *coursemodel.Filter,
 		paging *common.Paging,
 		moreKeys ...string,
-	) ([]*coursemodel.CourseGet, error)
+	) ([]*coursemodel.Course, error)
 }
 
 type getAllActiveCourseBiz struct {
@@ -23,7 +23,7 @@ func NewGetAllActiveCourseBiz(courseGetAllActiveRepo CourseGetAllActiveRepo) *ge
 	return &getAllActiveCourseBiz{courseGetAllActiveRepo: courseGetAllActiveRepo}
 }
 
-func (biz *getAllActiveCourseBiz) GetAllActiveCourse(ctx context.Context) ([]*coursemodel.CourseGet, error) {
+func (biz *getAllActiveCourseBiz) GetAllActiveCourse(ctx context.Context) ([]*coursemodel.Course, error) {
 	paging := common.Paging{}
 	paging.Fulfill()
 	course, err := biz.courseGetAllActiveRepo.GetCourseWithCondition(

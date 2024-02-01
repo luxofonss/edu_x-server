@@ -14,7 +14,7 @@ func (repo *courseRepo) GetCourseWithCondition(
 	filter *coursemodel.Filter,
 	paging *common.Paging,
 	moreKeys ...string,
-) ([]*coursemodel.CourseGet, error) {
+) ([]*coursemodel.Course, error) {
 	db := repo.db.Table(coursemodel.Course{}.TableName())
 
 	if filter != nil {
@@ -43,7 +43,7 @@ func (repo *courseRepo) GetCourseWithCondition(
 
 	fmt.Println("here")
 
-	var courses []*coursemodel.CourseGet
+	var courses []*coursemodel.Course
 	if err := db.Offset((paging.Page - 1) * paging.Limit).Limit(paging.Limit).Find(&courses).Error; err != nil {
 		return nil, common.ErrDB(err)
 	}

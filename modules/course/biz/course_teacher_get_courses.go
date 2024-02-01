@@ -12,7 +12,7 @@ type GetCourseRepo interface {
 		filter *coursemodel.Filter,
 		paging *common.Paging,
 		moreKeys ...string,
-	) ([]*coursemodel.CourseGet, error)
+	) ([]*coursemodel.Course, error)
 }
 
 type getCourseBiz struct {
@@ -27,7 +27,7 @@ func (biz *getCourseBiz) GetAllMyCourses(
 	ctx context.Context,
 	paging *common.Paging,
 	filter *coursemodel.Filter,
-) ([]*coursemodel.CourseGet, error) {
+) ([]*coursemodel.Course, error) {
 	courses, err := biz.courseRepo.GetCourseWithCondition(ctx, filter, paging, "Subject", "Teacher")
 	if err != nil {
 		return nil, common.ErrCannotListEntity(coursemodel.CourseEntityName, err)

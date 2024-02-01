@@ -27,8 +27,12 @@ func (repo *assignmentRepo) CreateQuestion(ctx context.Context, data *assignment
 	return data, nil
 }
 
-func (repo *assignmentRepo) GetQuestionById(ctx context.Context, questionId uuid.UUID) (*assignmentmodel.Question, error) {
+func (repo *assignmentRepo) GetQuestionById(ctx context.Context, questionId uuid.UUID, moreKeys ...string) (*assignmentmodel.Question, error) {
 	db := repo.db.Table(assignmentmodel.Question{}.TableName())
+
+	for i := range moreKeys {
+		db = db.Preload(moreKeys[i])
+	}
 
 	var question *assignmentmodel.Question
 

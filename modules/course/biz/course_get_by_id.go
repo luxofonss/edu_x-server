@@ -14,7 +14,7 @@ type CourseGetOneRepo interface {
 		filter *coursemodel.Filter,
 		paging *common.Paging,
 		moreKeys ...string,
-	) ([]*coursemodel.CourseGet, error)
+	) ([]*coursemodel.Course, error)
 }
 
 type getOneCourseByIdBiz struct {
@@ -25,10 +25,15 @@ func NewGetOneCourseBiz(courseGetOneRepo CourseGetOneRepo) *getOneCourseByIdBiz 
 	return &getOneCourseByIdBiz{courseGetOneRepo: courseGetOneRepo}
 }
 
-func (biz *getOneCourseByIdBiz) GetOneCourseById(ctx context.Context, courseId uuid.UUID) (*coursemodel.CourseGet, error) {
+func (biz *getOneCourseByIdBiz) GetOneCourseById(ctx context.Context, courseId uuid.UUID) (*coursemodel.Course, error) {
 	paging := common.Paging{}
 	paging.Fulfill()
-	course, err := biz.courseGetOneRepo.GetCourseWithCondition(ctx, &coursemodel.Filter{Id: courseId}, &paging)
+	course, err := biz.courseGetOneRepo.GetCourseWithCondition(
+		ctx,
+		&coursemodel.Filter{Id: courseId},
+		&paging,
+		"Sections", "Sections.Lectures", "CourseInfos", "Subject", "Teacher",
+	)
 	if err != nil {
 		return nil, err
 	}

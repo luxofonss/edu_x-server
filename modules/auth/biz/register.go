@@ -2,7 +2,6 @@ package authbiz
 
 import (
 	"context"
-
 	"server/common"
 	authmodel "server/modules/auth/model"
 	usrmodel "server/modules/user/model"
@@ -11,8 +10,6 @@ import (
 type UserRepo interface {
 	FindUser(ctx context.Context, conditions map[string]interface{}, moreInfo ...string) (*usrmodel.User, error)
 	CreateUser(ctx context.Context, data *usrmodel.User) (*usrmodel.User, error)
-	CreateLearnerInfo(ctx context.Context, data *usrmodel.LearnerInfo) error
-	CreateTeacherInfo(ctx context.Context, data *usrmodel.TeacherInfo) error
 }
 type registerBiz struct {
 	userRepo UserRepo

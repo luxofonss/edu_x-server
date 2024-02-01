@@ -5,7 +5,7 @@ import (
 )
 
 type CourseEnrollStatusUpdateRepo interface {
-	UpdateCourseEnrollStatus(courseId, userId uuid.UUID, status string) error
+	UpdateCourseEnrollStatus(courseEnrollId uuid.UUID, status string) error
 }
 
 type updateCourseEnrollStatusBiz struct {
@@ -16,8 +16,8 @@ func NewUpdateCourseEnrollStatusBiz(courseEnrollStatusUpdateRepo CourseEnrollSta
 	return &updateCourseEnrollStatusBiz{courseEnrollStatusUpdateRepo: courseEnrollStatusUpdateRepo}
 }
 
-func (biz *updateCourseEnrollStatusBiz) UpdateCourseEnrollStatus(courseId, userId uuid.UUID, status string) error {
-	err := biz.courseEnrollStatusUpdateRepo.UpdateCourseEnrollStatus(courseId, userId, status)
+func (biz *updateCourseEnrollStatusBiz) UpdateCourseEnrollStatus(courseEnrollId uuid.UUID, status string) error {
+	err := biz.courseEnrollStatusUpdateRepo.UpdateCourseEnrollStatus(courseEnrollId, status)
 	if err != nil {
 		return err
 	}

@@ -42,7 +42,7 @@ func (repo *assignmentRepo) GetAllAttemptInAssignment(ctx context.Context, assig
 
 	var attempts []assignmentmodel.AssignmentAttempt
 
-	err := db.Where("assignment_id = ? AND user_id = ?", assignmentId, userId).Find(&attempts).Error
+	err := db.Order("created_at asc").Where("assignment_id = ? AND user_id = ?", assignmentId, userId).Find(&attempts).Error
 	if err != nil {
 		return nil, err
 	}
@@ -63,8 +63,23 @@ func (repo *assignmentRepo) GetAssigmentAttemptById(ctx context.Context, assignm
 	return assigment, nil
 }
 
-// Submit
-func (repo *assignmentRepo) SubmitQuestionAnswer(ctx context.Context, data *assignmentmodel.QuestionAnswer) (*assignmentmodel.QuestionAnswer, error) {
+func (repo *assignmentRepo) GetAnswer(ctx context.Context, questionId uuid.UUID, userId uuid.UUID) (*assignmentmodel.QuestionAnswer, error) {
+	db := repo.db.Table(assignmentmodel.QuestionAnswer{}.TableName())
+
+	var answer *assignmentmodel.QuestionAnswer
+
+	err := db.Where("question_id = ? AND user_id = ?", questionId, userId).First(&answer).Error
+	if err != nil {
+		return nil, common.ErrCannotGetEntity(assignmentmodel.QuestionAnswerEntityName, err)
+	}
+
+	return answer, nil
+}
+
+func (repo *assignmentRepo) SubmitQuestionAnswer(
+	ctx context.Context,
+	data *assignmentmodel.QuestionAnswer,
+) (*assignmentmodel.QuestionAnswer, error) {
 	db := repo.db.Table(assignmentmodel.QuestionAnswer{}.TableName())
 
 	if err := db.Clauses(clause.OnConflict{
@@ -75,5 +90,95 @@ func (repo *assignmentRepo) SubmitQuestionAnswer(ctx context.Context, data *assi
 	}
 
 	return data, nil
+}
 
+func (repo *assignmentRepo) GetAssignmentAttemptById(
+	ctx context.Context,
+	id uuid.UUID,
+) (*assignmentmodel.AssignmentAttempt, error) {
+	db := repo.db.Table(assignmentmodel.AssignmentAttempt{}.TableName())
+
+	var assignmentAttempt *assignmentmodel.AssignmentAttempt
+
+	if err := db.Where("id = ?", id).First(&assignmentAttempt).Error; err != nil {
+		return nil, common.ErrCannotGetEntity(assignmentmodel.AssignmentAttemptEntityName, err)
+	}
+
+	var assignmentAttemptRes *assignmentmodel.AssignmentAttempt
+
+	db.Preload("Assignment").
+		Preload("Assignment.Questions").
+		Preload("Assignment.Questions.Choices").
+		Preload("Assignment.Questions.Answers", "user_id = ?", assignmentAttempt.UserId)
+
+	if err := db.Where("assignment_attempts.id = ?", id).First(&assignmentAttemptRes).Error; err != nil {
+		return nil, common.ErrCannotGetEntity(assignmentmodel.AssignmentAttemptEntityName, err)
+	}
+
+	return assignmentAttemptRes, nil
+}
+
+func (repo *assignmentRepo) GetAssignmentAttempt(
+	ctx context.Context,
+	filter *assignmentmodel.AssignmentAttemptFilter,
+	paging *common.Paging,
+	moreKeys ...string,
+) ([]*assignmentmodel.AssignmentAttempt, error) {
+	db := repo.db.Table(assignmentmodel.AssignmentAttempt{}.TableName())
+
+	if filter != nil {
+		if filter.Id != uuid.Nil {
+			db = db.Where("id = ?", filter.Id)
+		}
+
+		if filter.AssignmentId != uuid.Nil {
+			db = db.Where("assignment_id = ?", filter.AssignmentId)
+		}
+	}
+
+	for i := range moreKeys {
+		db = db.Preload(moreKeys[i])
+	}
+
+	var assignmentAttempt []*assignmentmodel.AssignmentAttempt
+	err := db.Offset((paging.Page - 1) * paging.Limit).Limit(paging.Limit).Find(&assignmentAttempt).Error
+	if err != nil {
+		return nil, common.ErrCannotGetEntity(assignmentmodel.AssignmentAttemptEntityName, err)
+	}
+
+	return assignmentAttempt, nil
+}
+
+func (repo *assignmentRepo) UpdateAssignmentAttempt(
+	ctx context.Context,
+	data *assignmentmodel.AssignmentAttempt,
+) (*assignmentmodel.AssignmentAttempt, error) {
+	db := repo.db.Table(assignmentmodel.AssignmentAttempt{}.TableName())
+
+	if err := db.Where("id = ?", data.Id).Updates(&data).Error; err != nil {
+		return nil, common.ErrCannotUpdateEntity(assignmentmodel.AssignmentAttemptEntityName, err)
+	}
+
+	return data, nil
+}
+
+func (repo *assignmentRepo) GetAllAttemptByAssignmentId(
+	ctx context.Context,
+	assignmentId uuid.UUID,
+	moreKeys ...string,
+) ([]assignmentmodel.AssignmentAttempt, error) {
+	db := repo.db.Table(assignmentmodel.AssignmentAttempt{}.TableName())
+
+	for i := range moreKeys {
+		db = db.Preload(moreKeys[i])
+	}
+
+	var attempts = []assignmentmodel.AssignmentAttempt{}
+
+	err := db.Where("assignment_id = ?", assignmentId).Find(&attempts).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return attempts, nil
 }

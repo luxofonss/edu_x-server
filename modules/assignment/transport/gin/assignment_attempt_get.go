@@ -1,17 +1,17 @@
 package assignmentgin
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"net/http"
 	"server/common"
 	"server/libs/appctx"
 	assignmentbiz "server/modules/assignment/biz"
+	assignmentdto "server/modules/assignment/dto"
 	assignmentrepo "server/modules/assignment/repository"
 )
 
-func GetAssignment(appCtx appctx.AppContext) gin.HandlerFunc {
+func GetAssignmentAttemptById(appCtx appctx.AppContext) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		uid, err := uuid.Parse(c.Param("id"))
 		if err != nil {
@@ -20,13 +20,14 @@ func GetAssignment(appCtx appctx.AppContext) gin.HandlerFunc {
 
 		db := appCtx.GetMainSQLDbConnection()
 		assignmentRepo := assignmentrepo.NewAssignmentRepo(db)
-		biz := assignmentbiz.NewAssignmentGetBiz(assignmentRepo)
+		biz := assignmentbiz.NewAssignmentAttemptGetBiz(assignmentRepo)
 
-		assignment, err := biz.GetAssignmentById(c.Request.Context(), uid)
+		assignmentAttempt, err := biz.GetAssignmentAttempt(c.Request.Context(), uid)
 		if err != nil {
 			panic(err)
 		}
 
-		c.JSON(http.StatusOK, common.SimpleSuccessResponse(assignment))
+		c.JSON(http.StatusOK, common.SimpleSuccessResponse(assignmentdto.ToAssignmentAttemptResponse(*assignmentAttempt)))
+		//c.JSON(http.StatusOK, common.SimpleSuccessResponse(assignmentAttempt))
 	}
 }

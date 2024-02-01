@@ -13,6 +13,8 @@ create type enroll_status as enum ('PENDING', 'ACTIVE', 'INACTIVE');
 
 alter type level add value 'beginner'
 
+alter type question_type add value 'multi_choice';
+
 
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
@@ -148,14 +150,16 @@ drop table if exists "teacher_infos" cascade;
 create table teacher_infos (
     "id" uuid not null PRIMARY KEY DEFAULT uuid_generate_v4(),
 	"user_id" uuid not null,
-	"edu_qualification" uuid not null,
+--	"edu_qualification" uuid not null,
 	"biography" text not null,
 	"updated_at" timestamp default CURRENT_TIMESTAMP,
   	"created_at" timestamp default CURRENT_TIMESTAMP,
   	"deleted_at" timestamp default null,
   	CONSTRAINT fk_teacher_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE cascade,
-  	constraint fk_edu_qualification foreign key (edu_qualification) references edu_qualifications(id) 
+--  	constraint fk_edu_qualification foreign key (edu_qualification) references edu_qualifications(id) 
 );
+
+alter table teacher_infos add column edu_qualification varchar(400);
 
 drop table if exists "schools" cascade;
 create table "schools" (
@@ -203,10 +207,11 @@ CREATE TABLE "courses" (
   "name" varchar(200) not NULL,
   "description" text not NULL,
   "background_img" text,
+  "thumbnail" text,
   "start_date" timestamp,
   "end_date" timestamp,
   "price" decimal(12,2),
-  "currency" currency,
+  "currency" currency default 'vnd',
   "level" level not NULL,
   "is_verified" boolean default false,
   "subject_id" uuid not NULL,
@@ -224,9 +229,12 @@ CREATE TABLE "courses" (
   )
 );
 
+alter table courses add column thumbnail text;
+
 drop table if exists "user_enroll_course" cascade;
 create table "user_enroll_course" (
-	"user_id" uuid not NULL DEFAULT uuid_generate_v4(),
+	"id" uuid not NULL DEFAULT uuid_generate_v4(),
+	"user_id" uuid not NULL,
 	"course_id" uuid not null,
 	"price" decimal(12,2),
 	"student_id" int,
@@ -375,6 +383,7 @@ CREATE TABLE "questions" (
   "title" text not null,
   "image" json,
   "audio_url" text,
+  "point" integer,
   "type" question_type not NULL,
   "level" question_level not NULL,
   "answer_explain" text,
@@ -389,6 +398,8 @@ CREATE TABLE "questions" (
 	(teacher_id is null and school_id is not null)
   )
 );
+
+alter table questions add column point integer;
 
 DROP table IF exists "question_choices" CASCADE;
 CREATE TABLE "question_choices" (
@@ -420,7 +431,7 @@ create table "question_answers" (
     "updated_at" timestamp DEFAULT CURRENT_TIMESTAMP
 );
 alter table question_answers  add constraint unique_question_attempt_user 
-        UNIQUE (question_id, assignment_attempt_id, user_id)
+        UNIQUE (question_id, assignment_attempt_id, user_id);
 alter table question_answers drop constraint check_only_one_answer;
 
 -- feedback for long answer

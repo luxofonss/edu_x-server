@@ -39,7 +39,7 @@ type Question struct {
 	SchoolId        uuid.UUID                `json:"school_id" gorm:"column:school_id;type:uuid;default:NULL;"`
 	SubjectId       uuid.UUID                `json:"subject_id" gorm:"column:subject_id;type:uuid;"`
 	Order           *int                     `json:"order" gorm:"-"`
-	Point           *int                     `json:"point" gorm:"-"`
+	Point           *int                     `json:"point" gorm:"point"`
 	ParentId        *uuid.UUID               `json:"parent_id" gorm:"column:parent_id;type:uuid;"`
 	Choices         []*QuestionChoice        `json:"choices" gorm:"foreignKey:QuestionId"`
 	CorrectAnswers  []*QuestionCorrectAnswer `json:"correct_answers" gorm:"foreignKey:QuestionId;"`
