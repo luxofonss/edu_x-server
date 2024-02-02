@@ -61,6 +61,7 @@ func SetupRoutes(ctx appctx.AppContext, r *gin.RouterGroup) {
 
 	// Assigment
 	r.GET("/assignment/:id", middleware.RequiredAuth(ctx), assignmentgin.GetAssignment(ctx))
+	r.GET("/courses/:courseId/assignment-attempts", middleware.RequiredAuth(ctx), assignmentgin.GetAllAssignmentAttemptInCourse(ctx))
 	r.POST("/assignment", middleware.RequiredTeacher(ctx), assignmentgin.CreateAssignment(ctx))
 
 	// recognize assignment

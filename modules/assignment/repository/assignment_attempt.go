@@ -9,7 +9,10 @@ import (
 	assignmentmodel "server/modules/assignment/model"
 )
 
-func (repo *assignmentRepo) CreateAssignmentAttempt(ctx context.Context, data *assignmentmodel.AssignmentAttemptCreate) (*assignmentmodel.AssignmentAttempt, error) {
+func (repo *assignmentRepo) CreateAssignmentAttempt(ctx context.Context, data *assignmentmodel.AssignmentAttemptCreate) (
+	*assignmentmodel.AssignmentAttempt,
+	error,
+) {
 	db := repo.db.Table(assignmentmodel.AssignmentAttempt{}.TableName())
 
 	attemptData := assignmentmodel.AssignmentAttempt{
@@ -36,6 +39,44 @@ func (repo *assignmentRepo) CheckMultipleAttempt(ctx context.Context, assignment
 	}
 
 	return assignment.MultipleAttempt, nil
+}
+
+func (repo *assignmentRepo) GetAssignmentAttemptWidthCondition(
+	ctx context.Context,
+	condition map[string]interface{},
+	moreKey ...string,
+) ([]*assignmentmodel.AssignmentAttempt, error) {
+	db := repo.db.Table(assignmentmodel.AssignmentAttempt{}.TableName())
+
+	var assignmentAttempt []*assignmentmodel.AssignmentAttempt
+
+	for i := range moreKey {
+		db = db.Preload(moreKey[i])
+	}
+
+	err := db.Where(condition).Find(&assignmentAttempt).Error
+	if err != nil {
+		return nil, common.ErrCannotGetEntity(assignmentmodel.AssignmentAttemptEntityName, err)
+	}
+
+	return assignmentAttempt, nil
+}
+
+func (repo *assignmentRepo) GetAllAssignmentAttemptInCourse(ctx context.Context, userId uuid.UUID, courseId uuid.UUID) ([]*assignmentmodel.AssignmentAttempt, error) {
+	db := repo.db.Table(assignmentmodel.AssignmentAttempt{}.TableName())
+
+	var assignmentAttempt []*assignmentmodel.AssignmentAttempt
+
+	db = db.Preload("Assignment", "placement_id = ? ", courseId)
+
+	fmt.Println("courseId:: ", courseId, "userId:: ", userId)
+	err := db.Joins("LEFT JOIN assignments on assignment_attempts.assignment_id = assignments.id").
+		Where("user_id = ?  and assignments.placement_id = ?", userId, courseId).Find(&assignmentAttempt).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return assignmentAttempt, nil
 }
 
 func (repo *assignmentRepo) GetAllAttemptInAssignment(ctx context.Context, assignmentId uuid.UUID, userId uuid.UUID) ([]assignmentmodel.AssignmentAttempt, error) {

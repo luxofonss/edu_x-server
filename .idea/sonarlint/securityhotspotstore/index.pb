@@ -305,3 +305,15 @@ n
 >modules/assignment/biz/assignment_attempt_long_answer_score.go,9\f\9fe003d4d09f65b329f20f90a1181079792f41c5
 x
 Hmodules/assignment/transport/gin/assignment_attempt_long_answer_score.go,0\4\04dbd4f53351420d05c3056c727d239200282106
+n
+>modules/assignment/biz/assignment_attempt_get_all_in_course.go,a\2\a274eee09fb2aa06cd49efbe150c5d473fc30fb2
+u
+Emodules/assignment/repository/assignment_attempt_get_all_in_course.go,9\5\95edd2494648b50cebedc6230a1f618b3915e103
+x
+Hmodules/assignment/transport/gin/assignment_attempt_get_all_in_course.go,c\8\c89f12be19ca49bb9078cce42bf42e4b97f618c7
+a
+1modules/course/biz/course_enroll_add_by_emails.go,b\f\bfe4a39403caf99061e84ec44537184c1b62dd17
+i
+9modules/user/repository/postgresql/get_users_by_emails.go,a\0\a0fbc2a477c09de1ea3e9e2c2188a48f3c235103
+p
+@modules/course/repository/postgresql/course_erroll_add_by_ids.go,7\8\78dda26d13536f1addec1a3a5554bcfa3d3c4190

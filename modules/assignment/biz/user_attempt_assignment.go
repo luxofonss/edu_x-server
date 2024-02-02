@@ -50,7 +50,8 @@ func (biz *assignmentAttemptBiz) AttemptAssignment(
 
 			maxSubmitTime := assignmentCreatedAt.Add(time.Duration(assignmentTimeMillis) * time.Millisecond)
 
-			if time.Now().Before(maxSubmitTime) {
+			timeNow := time.Now().Add(time.Hour * 7) // GTM +7
+			if timeNow.Before(maxSubmitTime) {
 				return &lastAttempt, nil
 			}
 
