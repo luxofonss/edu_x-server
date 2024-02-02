@@ -4,7 +4,9 @@ import (
 	"context"
 	"fmt"
 	"github.com/google/uuid"
+	"server/common"
 	assignmentmodel "server/modules/assignment/model"
+	"time"
 )
 
 type AssignmentAttemptRepo interface {
@@ -27,8 +29,8 @@ func NewAssignmentAttemptTeacherGetAllBiz(assignmentAttemptRepo AssignmentAttemp
 	return &AssignmentAttemptTeacherGetAllBiz{assignmentAttemptRepo: assignmentAttemptRepo}
 }
 
-func (biz *AssignmentAttemptTeacherGetAllBiz) GetAllAssignmentAttemptByAssignmentId(ctx context.Context, assignmentId uuid.UUID, moreKeys ...string) ([]assignmentmodel.AssignmentAttempt, error) {
-	assignmentAttempts, err := biz.assignmentAttemptRepo.GetAllAttemptByAssignmentId(ctx, assignmentId, moreKeys...)
+func (biz *AssignmentAttemptTeacherGetAllBiz) GetAllAssignmentAttemptByAssignmentId(ctx context.Context, assignmentId uuid.UUID) ([]assignmentmodel.AssignmentAttempt, error) {
+	assignmentAttempts, err := biz.assignmentAttemptRepo.GetAllAttemptByAssignmentId(ctx, assignmentId, "User")
 	if err != nil {
 		return nil, err
 	}
@@ -44,7 +46,6 @@ func (biz *AssignmentAttemptTeacherGetAllBiz) GetAllAssignmentAttemptByAssignmen
 
 			newAssignmentAttempt := detailAttempt
 			newAssignmentAttempt.Point = new(int)
-			fmt.Println("assignmentAttempt:: ", detailAttempt.Assignment.Questions)
 			for _, question := range detailAttempt.Assignment.Questions {
 				if question.Type == assignmentmodel.SingleChoice {
 					if len(question.Answers) > 0 && question.Answers[0].SelectedOptionId != nil {
@@ -66,6 +67,13 @@ func (biz *AssignmentAttemptTeacherGetAllBiz) GetAllAssignmentAttemptByAssignmen
 				}
 			}
 
+			if newAssignmentAttempt.FinishedAt == nil {
+				assignmentCreatedAt, _ := time.Parse(common.DateString, newAssignmentAttempt.CreatedAt.String())
+				assignmentTimeMillis := newAssignmentAttempt.AssignmentTimeMillis
+				maxSubmitTime := assignmentCreatedAt.Add(time.Millisecond * time.Duration(assignmentTimeMillis))
+				maxTime := time.Time(maxSubmitTime)
+				newAssignmentAttempt.FinishedAt = &maxTime
+			}
 			_, err = biz.assignmentAttemptRepo.UpdateAssignmentAttempt(ctx, newAssignmentAttempt)
 			if err != nil {
 				return nil, err

@@ -291,3 +291,17 @@ l
 <modules/assignment/biz/assignment_attempt_teacher_get_all.go,0\5\0589335ccf8ad7325d160a32a0f3f52a218268c3
 v
 Fmodules/assignment/transport/gin/assignment_attempt_teacher_get_all.go,b\0\b099781d9d62f4eaa314d972fcb9082b2734687f
+i
+9modules/assignment/biz/update_long_answer_for_feedback.go,f\1\f1683aaf608eafa3103d00c86a7b71f56534cebd
+q
+Amodules/assignment/transport/gin/feedback_edit_question_answer.go,b\0\b08e3645981f88811873ef2959d1695ef59f785e
+g
+7modules/assignment/biz/feedback_edit_question_answer.go,d\c\dcdc8be38611475c544f4f3cea3316b552fc5991
+c
+3modules/assignment/biz/assignment_attempt_submit.go,5\2\52845b177e7eca03d14ee4fd999358691d6b4834
+m
+=modules/assignment/transport/gin/assignment_attempt_submit.go,f\f\fff065e1576ed21229e0fb47b6866f05188620dc
+n
+>modules/assignment/biz/assignment_attempt_long_answer_score.go,9\f\9fe003d4d09f65b329f20f90a1181079792f41c5
+x
+Hmodules/assignment/transport/gin/assignment_attempt_long_answer_score.go,0\4\04dbd4f53351420d05c3056c727d239200282106

@@ -74,8 +74,11 @@ func SetupRoutes(ctx appctx.AppContext, r *gin.RouterGroup) {
 
 	// do assignment
 	r.POST("/assignment-attempt/:assignmentAttemptId/question/:questionId/answer", middleware.RequiredAuth(ctx), assignmentgin.SubmitQuestionAnswer(ctx))
+	r.POST("/assignment-attempt/:assignmentAttemptId/submit", middleware.RequiredAuth(ctx), assignmentgin.SubmitAssignment(ctx))
 
 	// feedback
+	r.PUT("/assignment-attempt/:assignmentAttemptId/question/:questionId/answer", middleware.RequiredAuth(ctx), assignmentgin.FeedbackEditQuestionAnswer(ctx))
 	r.POST("/assignment-attempt/:assignmentAttemptId/answer/:questionAnswerId/feedback", middleware.RequiredAuth(ctx), assignmentgin.CreateFeedbackAnswer(ctx))
 	r.GET("/answer/:answerId/feedbacks", middleware.RequiredAuth(ctx), assignmentgin.GetFeedbacksByAnswerId(ctx))
+	r.PUT("/assignment-attempt/:assignmentAttemptId/answer/:questionAnswerId/score", middleware.RequiredTeacher(ctx), assignmentgin.LongAnswerScore(ctx))
 }

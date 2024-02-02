@@ -1,6 +1,7 @@
 package assignmentgin
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"net/http"
@@ -26,16 +27,30 @@ func CreateFeedbackAnswer(appCtx appctx.AppContext) gin.HandlerFunc {
 			panic(err)
 		}
 
-		feedbackId, err := uuid.Parse(data.FeedbackId)
+		Id, err := uuid.Parse(data.Id)
 		if err != nil {
 			panic(err)
 		}
+
+		var FeedbackId *uuid.UUID
+
+		if data.FeedbackId != "" {
+			FeedbackIdUUID, _ := uuid.Parse(data.FeedbackId)
+			FeedbackId = &FeedbackIdUUID
+
+		} else {
+			FeedbackId = nil
+		}
+
+		fmt.Println("questionAnswerId:: ", questionAnswerId)
 
 		feedback := &assignmentmodel.Feedback{
 			QuestionAnswerId: questionAnswerId,
 			UserId:           requester.GetUserId(),
 			Message:          data.Message,
-			FeedbackId:       &feedbackId,
+			Id:               Id,
+			FeedbackId:       FeedbackId,
+			Type:             data.Type,
 		}
 
 		// setup dependencies

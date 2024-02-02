@@ -2,6 +2,7 @@ package assignmentrepo
 
 import (
 	"context"
+	"fmt"
 	"github.com/google/uuid"
 	"gorm.io/gorm/clause"
 	"server/common"
@@ -109,7 +110,8 @@ func (repo *assignmentRepo) GetAssignmentAttemptById(
 	db.Preload("Assignment").
 		Preload("Assignment.Questions").
 		Preload("Assignment.Questions.Choices").
-		Preload("Assignment.Questions.Answers", "user_id = ?", assignmentAttempt.UserId)
+		Preload("Assignment.Questions.Answers", "user_id = ? AND assignment_attempt_id = ?", assignmentAttempt.UserId, assignmentAttempt.Id).
+		Preload("Assignment.Questions.Answers.Feedback")
 
 	if err := db.Where("assignment_attempts.id = ?", id).First(&assignmentAttemptRes).Error; err != nil {
 		return nil, common.ErrCannotGetEntity(assignmentmodel.AssignmentAttemptEntityName, err)
@@ -181,4 +183,36 @@ func (repo *assignmentRepo) GetAllAttemptByAssignmentId(
 	}
 
 	return attempts, nil
+}
+
+func (repo *assignmentRepo) UpdateQuestionAnswer(
+	ctx context.Context,
+	data *assignmentmodel.QuestionAnswer,
+) (*assignmentmodel.QuestionAnswer, error) {
+	db := repo.db.Table(assignmentmodel.QuestionAnswer{}.TableName())
+
+	fmt.Println("data:: ", data.Id)
+	if err := db.Where("id = ? ", data.Id).Updates(&data).Error; err != nil {
+		return nil, common.ErrCannotUpdateEntity(assignmentmodel.QuestionAnswerEntityName, err)
+	}
+
+	return data, nil
+}
+
+func (repo *assignmentRepo) UpdateLongAnswerScore(ctx context.Context, questionAnswerId uuid.UUID, point int) (*assignmentmodel.QuestionAnswer, error) {
+	db := repo.db.Table(assignmentmodel.QuestionAnswer{}.TableName())
+
+	if err := db.Where("id = ?", questionAnswerId).Update("score", point).Error; err != nil {
+		return nil, common.ErrCannotUpdateEntity(assignmentmodel.QuestionAnswerEntityName, err)
+	}
+
+	db2 := repo.db.Table(assignmentmodel.QuestionAnswer{}.TableName())
+	var questionAnswer *assignmentmodel.QuestionAnswer
+
+	if err := db2.Where("id = ?", questionAnswerId).First(&questionAnswer).Error; err != nil {
+		return nil, common.ErrCannotGetEntity(assignmentmodel.QuestionAnswerEntityName, err)
+	}
+
+	fmt.Println("questionAnswer:: ", questionAnswer.Score)
+	return questionAnswer, nil
 }

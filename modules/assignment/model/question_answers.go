@@ -14,6 +14,7 @@ type QuestionAnswer struct {
 	AssignmentAttemptId uuid.UUID       `json:"assignment_attempt_id" gorm:"column:assignment_attempt_id;type:uuid;"`
 	SelectedOptionId    *uuid.UUID      `json:"selected_option_id" gorm:"column:selected_option_id;type:uuid;"`
 	TextAnswer          string          `json:"text_answer" gorm:"column:text_answer;"`
+	Score               *int            `json:"score" gorm:"column:score;"`
 	Question            *Question       `json:"question" gorm:"foreignKey:QuestionId;"`
 	Feedback            []*Feedback     `json:"feedback" gorm:"foreignKey:QuestionAnswerId;"`
 	Choice              *QuestionChoice `json:"option" gorm:"foreignKey:SelectedOptionId;"`

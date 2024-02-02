@@ -31,12 +31,13 @@ func (biz *assignmentAttemptGetResultBiz) GetAssignmentAttemptResult(ctx context
 		return nil, err
 	}
 
-	if assignmentAttempt.AssignmentTimeMillis != 0 {
+	if assignmentAttempt.AssignmentTimeMillis != 0 && assignmentAttempt.FinishedAt == nil {
 		assignmentCreatedAt, err := time.Parse(common.DateString, assignmentAttempt.CreatedAt.String())
 
 		assignmentTimeMillis := assignmentAttempt.AssignmentTimeMillis
 		maxSubmitTime := assignmentCreatedAt.Add(time.Duration(assignmentTimeMillis) * time.Millisecond)
 
+		fmt.Println("maxSubmitTime:: ", maxSubmitTime, time.Now())
 		if time.Now().Before(maxSubmitTime) {
 			return nil, common.NewCustomError(err, "This attempt is in time!", "SUBMIT_QUESTION")
 		}
@@ -64,6 +65,10 @@ func (biz *assignmentAttemptGetResultBiz) GetAssignmentAttemptResult(ctx context
 					if answer.CorrectTextAnswer == question.Answers[0].TextAnswer {
 						*newAssignmentAttempt.Point += *question.Point
 					}
+				}
+			} else if question.Type == assignmentmodel.LongAnswer {
+				if question.Answers[0].Score != nil {
+					*newAssignmentAttempt.Point += *question.Answers[0].Score
 				}
 			}
 		}

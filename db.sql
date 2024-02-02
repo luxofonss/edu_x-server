@@ -10,6 +10,7 @@ create type learner_type as ENUM('student','pupil','other');
 create type supervisor_relationship as ENUM('mother', 'father', 'sister','brother','other');
 create type auth_types as ENUM('email_pwd', 'facebook', 'google');
 create type enroll_status as enum ('PENDING', 'ACTIVE', 'INACTIVE');
+create type feedback_types as enum ('GOOD','BAD');
 
 alter type level add value 'beginner'
 
@@ -433,20 +434,21 @@ create table "question_answers" (
 alter table question_answers  add constraint unique_question_attempt_user 
         UNIQUE (question_id, assignment_attempt_id, user_id);
 alter table question_answers drop constraint check_only_one_answer;
+alter table question_answers add column score int; -- score for long answer
 
 -- feedback for long answer
 DROP table IF exists "feedbacks" CASCADE;
 CREATE TABLE "feedbacks" (
-  "id" uuid not null primary key default uuid_generate_v4(),
+  "id" uuid not null primary key,
   "message" text not null,
   "user_id" uuid not null references users(id),
+  "type" feedback_types not null,
   "question_answer_id" uuid  not null references question_answers(id),
-  "feedback_id" uuid references feedbacks(id), -- target feedback
+  "feedback_id" uuid references feedbacks(id) default NULL, -- target feedback
   "deleted_at" timestamp default NULL,
   "created_at" timestamp DEFAULT CURRENT_TIMESTAMP,
   "updated_at" timestamp DEFAULT CURRENT_TIMESTAMP
 );
-
 
 drop table if exists "correct_answers" cascade;
 create table "correct_answers" (

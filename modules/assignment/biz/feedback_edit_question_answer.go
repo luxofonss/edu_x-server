@@ -2,14 +2,11 @@ package assignmentbiz
 
 import (
 	"context"
-	"server/common"
-	"time"
-
 	"github.com/google/uuid"
 	assignmentmodel "server/modules/assignment/model"
 )
 
-type SubmitQuestionAnswerRepo interface {
+type FeedbackEditQuestionAnswerRepo interface {
 	GetAssigmentAttemptById(ctx context.Context, assignmentAttemptId uuid.UUID) (
 		*assignmentmodel.AssignmentAttempt,
 		error,
@@ -18,7 +15,7 @@ type SubmitQuestionAnswerRepo interface {
 		*assignmentmodel.Question,
 		error,
 	)
-	SubmitQuestionAnswer(ctx context.Context, data *assignmentmodel.QuestionAnswer) (
+	UpdateQuestionAnswer(ctx context.Context, data *assignmentmodel.QuestionAnswer) (
 		*assignmentmodel.QuestionAnswer,
 		error,
 	)
@@ -28,15 +25,15 @@ type SubmitQuestionAnswerRepo interface {
 	)
 }
 
-type submitQuestionAnswerBiz struct {
-	repo SubmitQuestionAnswerRepo
+type feedbackEditQuestionAnswerBiz struct {
+	repo FeedbackEditQuestionAnswerRepo
 }
 
-func NewSubmitQuestionAnswerBiz(repo SubmitQuestionAnswerRepo) *submitQuestionAnswerBiz {
-	return &submitQuestionAnswerBiz{repo: repo}
+func NewFeedbackEditQuestionAnswer(repo FeedbackEditQuestionAnswerRepo) *feedbackEditQuestionAnswerBiz {
+	return &feedbackEditQuestionAnswerBiz{repo: repo}
 }
 
-func (biz *submitQuestionAnswerBiz) SubmitQuestionAnswer(
+func (biz *feedbackEditQuestionAnswerBiz) FeedbackEditQuestionAnswer(
 	ctx context.Context,
 	data *assignmentmodel.QuestionAnswer,
 ) (*assignmentmodel.QuestionAnswer, error) {
@@ -59,21 +56,8 @@ func (biz *submitQuestionAnswerBiz) SubmitQuestionAnswer(
 		return nil, assignmentmodel.ErrQuestionNotInAssignment
 	}
 
-	// Check VALID TIME to submit question
-	if assignmentAttempt.AssignmentTimeMillis != 0 {
-		assignmentCreatedAt, err := time.Parse(common.DateString, assignmentAttempt.CreatedAt.String())
-
-		assignmentTimeMillis := assignmentAttempt.AssignmentTimeMillis
-		maxSubmitTime := assignmentCreatedAt.Add(time.Duration(assignmentTimeMillis) * time.Millisecond)
-
-		timeNow := time.Now().Add(time.Hour * 7) // GTM +7
-		if timeNow.After(maxSubmitTime) {
-			return nil, common.NewCustomError(err, "Time to submit this assignment has expired!", "assignment_attempt_already_finished")
-		}
-	}
-
 	// Add answer
-	questionAnswer, err := biz.repo.SubmitQuestionAnswer(ctx, data)
+	questionAnswer, err := biz.repo.UpdateQuestionAnswer(ctx, data)
 	if err != nil {
 		return nil, err
 	}

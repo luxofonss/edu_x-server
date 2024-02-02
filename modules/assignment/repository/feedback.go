@@ -2,7 +2,9 @@ package assignmentrepo
 
 import (
 	"context"
+	"fmt"
 	"github.com/google/uuid"
+	"gorm.io/gorm/clause"
 	"server/common"
 	assignmentmodel "server/modules/assignment/model"
 )
@@ -10,7 +12,12 @@ import (
 func (repo *assignmentRepo) CreateFeedbackAnswer(ctx context.Context, data *assignmentmodel.Feedback) (*assignmentmodel.Feedback, error) {
 	db := repo.db
 
-	if err := db.Create(&data).Error; err != nil {
+	fmt.Println("data", data.Id, data.FeedbackId)
+
+	if err := db.Clauses(clause.OnConflict{
+		Columns:   []clause.Column{{Name: "id"}},
+		DoUpdates: clause.AssignmentColumns([]string{"message"}),
+	}).Create(&data).Error; err != nil {
 		return nil, common.ErrDB(err)
 	}
 
