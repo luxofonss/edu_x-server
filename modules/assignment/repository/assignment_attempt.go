@@ -152,7 +152,8 @@ func (repo *assignmentRepo) GetAssignmentAttemptById(
 		Preload("Assignment.Questions").
 		Preload("Assignment.Questions.Choices").
 		Preload("Assignment.Questions.Answers", "user_id = ? AND assignment_attempt_id = ?", assignmentAttempt.UserId, assignmentAttempt.Id).
-		Preload("Assignment.Questions.Answers.Feedback")
+		Preload("Assignment.Questions.Answers.Feedback").
+		Preload("Assignment.Questions.Answers.Feedback.User")
 
 	if err := db.Where("assignment_attempts.id = ?", id).First(&assignmentAttemptRes).Error; err != nil {
 		return nil, common.ErrCannotGetEntity(assignmentmodel.AssignmentAttemptEntityName, err)

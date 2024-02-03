@@ -14,7 +14,7 @@ const (
 	DbTypeQuestionChoice    = 7
 	DbTypeQuestionAnswer    = 8
 	DbTypeAssignmentAttempt = 9
-	TokenExpireTime         = 60 * 60 // 1 hour
+	TokenExpireTime         = 24 * 60 * 60 // 24 hour
 )
 
 const (

@@ -58,6 +58,7 @@ func SetupRoutes(ctx appctx.AppContext, r *gin.RouterGroup) {
 
 	// Course enroll manage
 	r.PUT("/courses/enrolls", gincourse.UpdateCourseEnroll(ctx))
+	r.POST("/courses/:courseId/enrolls/add-many", gincourse.AddUsersToCourseByEmails(ctx))
 
 	// Assigment
 	r.GET("/assignment/:id", middleware.RequiredAuth(ctx), assignmentgin.GetAssignment(ctx))

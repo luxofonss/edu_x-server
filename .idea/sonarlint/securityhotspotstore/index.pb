@@ -291,8 +291,6 @@ l
 <modules/assignment/biz/assignment_attempt_teacher_get_all.go,0\5\0589335ccf8ad7325d160a32a0f3f52a218268c3
 v
 Fmodules/assignment/transport/gin/assignment_attempt_teacher_get_all.go,b\0\b099781d9d62f4eaa314d972fcb9082b2734687f
-i
-9modules/assignment/biz/update_long_answer_for_feedback.go,f\1\f1683aaf608eafa3103d00c86a7b71f56534cebd
 q
 Amodules/assignment/transport/gin/feedback_edit_question_answer.go,b\0\b08e3645981f88811873ef2959d1695ef59f785e
 g
@@ -307,8 +305,6 @@ x
 Hmodules/assignment/transport/gin/assignment_attempt_long_answer_score.go,0\4\04dbd4f53351420d05c3056c727d239200282106
 n
 >modules/assignment/biz/assignment_attempt_get_all_in_course.go,a\2\a274eee09fb2aa06cd49efbe150c5d473fc30fb2
-u
-Emodules/assignment/repository/assignment_attempt_get_all_in_course.go,9\5\95edd2494648b50cebedc6230a1f618b3915e103
 x
 Hmodules/assignment/transport/gin/assignment_attempt_get_all_in_course.go,c\8\c89f12be19ca49bb9078cce42bf42e4b97f618c7
 a
@@ -317,3 +313,5 @@ i
 9modules/user/repository/postgresql/get_users_by_emails.go,a\0\a0fbc2a477c09de1ea3e9e2c2188a48f3c235103
 p
 @modules/course/repository/postgresql/course_erroll_add_by_ids.go,7\8\78dda26d13536f1addec1a3a5554bcfa3d3c4190
+k
+;modules/course/transport/gin/course_enroll_add_by_emails.go,9\1\910542b890015e26434d12a20b7bd11bf6dc0e9a

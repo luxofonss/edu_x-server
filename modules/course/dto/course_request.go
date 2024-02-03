@@ -92,3 +92,7 @@ type CourseEnrollUpdateRequest struct {
 	Status         string `json:"status"`
 	CourseEnrollId string `json:"id"`
 }
+
+type CourseEnrollAddByEmailsRequest struct {
+	Emails []string `json:"emails"`
+}

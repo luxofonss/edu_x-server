@@ -7,7 +7,7 @@ import (
 	coursemodel "server/modules/course/model"
 )
 
-func (repo *courseRepo) AddEnrollmentByUserIds(ctx context.Context, courseId uuid.UUID, userIds []uuid.UUID) error {
+func (repo *courseRepo) AddUsersToCourseByIds(ctx context.Context, courseId uuid.UUID, userIds []uuid.UUID) error {
 	db := repo.db.Table(coursemodel.UserEnrollCourse{}.TableName())
 	// Start a new transaction
 	tx := db.Begin()

@@ -3,6 +3,7 @@ package coursebiz
 import (
 	"context"
 	"github.com/google/uuid"
+	usermodel "server/modules/user/model"
 )
 
 type AddUsersToCourseRepo interface {
@@ -10,7 +11,7 @@ type AddUsersToCourseRepo interface {
 }
 
 type GetUsersByEmailsRepo interface {
-	GetUsersByEmails(ctx context.Context, emails []string) ([]uuid.UUID, error)
+	GetUsersByEmails(ctx context.Context, emails []string) ([]*usermodel.User, error)
 }
 
 type AddUsersToCourseByEmailsBiz struct {
@@ -30,7 +31,7 @@ func (biz *AddUsersToCourseByEmailsBiz) AddUsersToCourseByEmails(ctx context.Con
 
 	var userIds []uuid.UUID
 	for _, user := range users {
-		userIds = append(userIds, user)
+		userIds = append(userIds, user.Id)
 	}
 
 	return biz.repo.AddUsersToCourseByIds(ctx, courseId, userIds)
